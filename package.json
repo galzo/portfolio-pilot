@@ -2,7 +2,6 @@
   "name": "portfolio-pilot",
   "version": "1.0.0",
   "description": "An internal project used for study purposes of different API exploits, this site is a mock portfolio management app that provides several known exploits in it's backend API design",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
