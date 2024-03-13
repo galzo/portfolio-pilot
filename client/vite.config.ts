@@ -3,7 +3,6 @@ import react from "@vitejs/plugin-react";
 import typescriptCheckerPlugin from "vite-plugin-checker";
 import { fileURLToPath } from "url";
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), typescriptCheckerPlugin({ typescript: true })],
   build: {
