@@ -7,17 +7,31 @@
   "files": [
     "build/**/*"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/galzo/portfolio-pilot.git"
+  },
+  "homepage": "https://github.com/galzo/portfolio-pilot#readme",
   "scripts": {
     "clean": "rimraf ./build",
     "build": "npm run clean && tsc",
     "start:dev": "nodemon ./src/app.ts",
-    "start:prod": "npm run build &&  node ./build/app.js"
+    "start:prod": "npm run build &&  node ./build/app.js",
+    "lint": "eslint . --ext .ts",
+    "prettify": "prettier --config .prettierrc.json 'src/**/*.ts' --write"
   },
-  "author": "galzo (galzohar@gmail.com)",
+  "author": "Gal Zohar <galzohar@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "@tsconfig/node20": "^20.1.2",
     "@types/node": "^20.11.26",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "eslint-plugin-prettier": "^5.1.3",
     "nodemon": "^3.1.0",
     "rimraf": "^5.0.5",
     "ts-node": "^10.9.2",
