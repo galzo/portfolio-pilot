@@ -5,7 +5,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "galzo (galzohar@gmail.com)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/galzo/portfolio-pilot.git"
+  },
+  "homepage": "https://github.com/galzo/portfolio-pilot#readme",
+  "author": "Gal Zohar <galzohar@gmail.com>",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^20.11.26",
