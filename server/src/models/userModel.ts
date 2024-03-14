@@ -16,6 +16,8 @@ export class UserModel extends BaseModel {
 	getUserByEmail = async (email: string) =>
 		this.userRepo.findOne({ where: { email } });
 
+	getUserById = async (id: number) => this.userRepo.findOne({ where: { id } });
+
 	private get userRepo() {
 		return this.db.getRepository(User);
 	}
