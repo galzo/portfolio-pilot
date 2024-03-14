@@ -40,8 +40,9 @@ export const signup = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
 	try {
 		const { email, password } = req.body as LoginUserRequest;
-		const userModel = new UserModel(req.db);
+		console.log(`Logging in user: ${email}`);
 
+		const userModel = new UserModel(req.db);
 		const user = await userModel.getUserByEmail(email);
 		const isMatching = await isUserPasswordMatching(user, password);
 
