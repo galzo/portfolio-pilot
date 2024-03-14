@@ -31,6 +31,3 @@ export const StocksDbData = [
 		ticker: 'AMZN',
 	},
 ];
-
-export const DB_SOURCE = 'db.sqlite';
-export const APP_PORT = 3000;

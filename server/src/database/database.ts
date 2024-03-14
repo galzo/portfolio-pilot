@@ -1,6 +1,6 @@
 import { DataSource } from 'typeorm';
 import fs from 'fs';
-import { AdminUserDbData, DB_SOURCE, StocksDbData } from '../common/constants';
+import { AdminUserDbData, StocksDbData } from '../common/constants';
 import { Stock } from '../entities/stock';
 import { Portfolio } from '../entities/portfolio';
 import { PortfolioStock } from '../entities/portfolioStock';
@@ -8,14 +8,15 @@ import { User } from '../entities/user';
 import { StockModel } from '../models/stockModel';
 import { UserModel } from '../models/userModel';
 
-const isDbAlreadyCreated = () => fs.existsSync(DB_SOURCE);
+const getDbFileName = () => process.env.DB_FILE || 'db.sqlite';
+const isDbAlreadyCreated = () => fs.existsSync(getDbFileName());
 
 const initDbInstance = async () => {
 	console.log('Initalizing DB...');
 
 	const db = new DataSource({
 		type: 'sqlite',
-		database: DB_SOURCE,
+		database: getDbFileName(),
 		synchronize: true,
 		entities: [Stock, Portfolio, PortfolioStock, User],
 	});
