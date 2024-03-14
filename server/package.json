@@ -14,6 +14,7 @@
   "homepage": "https://github.com/galzo/portfolio-pilot#readme",
   "scripts": {
     "clean": "rimraf ./build",
+    "clean-db": "rimraf db.sqlite",
     "build": "npm run clean && tsc",
     "start:dev": "nodemon ./src/app.ts",
     "start:prod": "npm run build &&  node ./build/app.js",

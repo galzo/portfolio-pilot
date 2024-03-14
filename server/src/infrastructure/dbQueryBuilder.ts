@@ -29,3 +29,6 @@ export const createPortfolioStockTableCmd = () =>
         amount INTEGER NOT NULL,\
         FOREIGN KEY (portfolio_id) REFERENCES Portfolio(id),\
         FOREIGN KEY (stock_id) REFERENCES Stock(id))';
+
+export const insertAdminUserCmd = () =>
+	`INSERT INTO User (name, email, password, is_admin) VALUES (?, ?, ?, ?)`;
