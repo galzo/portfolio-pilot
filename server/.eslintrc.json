@@ -26,6 +26,8 @@
 		"prettier/prettier": 2,
 		"import/prefer-default-export": 0,
 		"import/extensions": 0,
-		"@typescript-eslint/no-unused-vars": 1
+		"@typescript-eslint/no-unused-vars": 1,
+		"no-console": 0,
+		"no-multi-str": 0
 	}
 }
