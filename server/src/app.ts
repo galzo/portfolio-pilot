@@ -1,7 +1,10 @@
-import { bootstrapDb } from './deprecated/dbBuilder';
 import 'reflect-metadata';
-import { initializeDb } from './infrastructure/testFile';
+import { bootstrapDb } from './infrastructure/dbInitializer';
 
 console.log('hello world');
 
-initializeDb();
+const runServer = async () => {
+	const db = await bootstrapDb();
+};
+
+runServer();
