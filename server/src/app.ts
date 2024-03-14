@@ -13,7 +13,7 @@ const setupServer = (db: DataSource) => {
 
 	// Setup middleware
 	app.use(express.json());
-	app.use(express.urlencoded());
+	app.use(express.urlencoded({ extended: true }));
 	app.use(cors());
 	app.use(databaseMiddleware(db));
 
