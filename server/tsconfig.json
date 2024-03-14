@@ -16,6 +16,10 @@
 		"experimentalDecorators": true,
 		"strictPropertyInitialization": false
 	},
+	"ts-node": {
+		"files": true
+	},
+	"files": ["./src/types/express.d.ts"],
 	"exclude": ["node_modules"],
 	"include": ["./src/**/*.ts"]
 }
