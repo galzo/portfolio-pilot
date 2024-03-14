@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import express from 'express';
 import bodyParser from 'body-parser';
 import { DataSource } from 'typeorm';
-import { setupDatabase } from './infrastructure/database';
+import { setupDatabase } from './database/database';
 import { APP_PORT } from './common/constants';
 import { databaseMiddleware } from './middleware/databaseMiddleware';
 

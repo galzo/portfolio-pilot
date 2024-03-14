@@ -1,5 +1,5 @@
 import { User } from '../entities/user';
-import { hashPassword } from '../infrastructure/passwordManager';
+import { hashPassword } from '../common/passwordUtils';
 import { BaseModel } from './baseModel';
 
 export class UserModel extends BaseModel {
@@ -9,15 +9,18 @@ export class UserModel extends BaseModel {
 		password: string,
 		isAdmin: boolean
 	) => {
-		const user = await this.buildUserEntity(name, email, password, isAdmin);
+		const user = this.buildUserEntity(name, email, password, isAdmin);
 		return this.userRepo.save(user);
 	};
+
+	getUserByEmail = async (email: string) =>
+		this.userRepo.findOne({ where: { email } });
 
 	private get userRepo() {
 		return this.db.getRepository(User);
 	}
 
-	private buildUserEntity = async (
+	private buildUserEntity = (
 		name: string,
 		email: string,
 		password: string,
@@ -27,7 +30,7 @@ export class UserModel extends BaseModel {
 		user.name = name;
 		user.email = email;
 		user.isAdmin = isAdmin;
-		user.password = await hashPassword(password);
+		user.password = password;
 
 		return user;
 	};
