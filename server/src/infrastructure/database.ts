@@ -24,7 +24,7 @@ const initDbInstance = async () => {
 	return db;
 };
 
-const populateDb = async (db: DataSource) => {
+const populateDatabase = async (db: DataSource) => {
 	console.log('Running initial db data population...');
 
 	const userModel = new UserModel(db);
@@ -41,12 +41,12 @@ const populateDb = async (db: DataSource) => {
 	});
 };
 
-export const bootstrapDb = async () => {
+export const setupDatabase = async () => {
 	const shouldPopulateDb = !isDbAlreadyCreated();
 	const db = await initDbInstance();
 
 	if (shouldPopulateDb) {
-		await populateDb(db);
+		await populateDatabase(db);
 	}
 
 	return db;

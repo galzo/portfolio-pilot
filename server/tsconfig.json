@@ -11,7 +11,7 @@
 		"noImplicitAny": true,
 		"declaration": true,
 		"types": ["node"],
-		"typeRoots": ["./node_modules/@types"],
+		"typeRoots": ["./node_modules/@types", "./src/types"],
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		"strictPropertyInitialization": false
