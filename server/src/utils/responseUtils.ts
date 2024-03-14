@@ -8,9 +8,9 @@ export const internalServerErrorResponse = (
 	response.status(500).json({ error: message });
 };
 
-export const okResponse = (response: Response, message: string) => {
-	console.log(`Returning (200) Response. message: ${message}`);
-	response.status(200).json({ message });
+export const okResponse = (response: Response, payload: unknown) => {
+	console.log(`Returning (200) Response`);
+	response.status(200).json(payload);
 };
 
 export const notFoundResponse = (

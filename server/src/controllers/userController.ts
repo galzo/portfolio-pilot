@@ -7,6 +7,7 @@ import {
 	unauthorizedResponse,
 } from '../utils/responseUtils';
 import { isUserPasswordMatching } from '../utils/userUtils';
+import { generateJwtToken } from '../utils/authUtils';
 
 interface SignupRequest {
 	name: string;
@@ -24,13 +25,20 @@ export const signup = async (req: Request, res: Response) => {
 	try {
 		const { name, email, password, isAdmin } = req.body as SignupRequest;
 
-		console.log(`Creating new user: ${email}`);
+		console.log(`Trying to signup user: ${email}`);
 		const userModel = new UserModel(req.db);
 		const hashedPassword = await hashPassword(password);
-		await userModel.insertUser(name, email, hashedPassword, isAdmin);
-		console.log('User successfully created');
+		const user = await userModel.insertUser(
+			name,
+			email,
+			hashedPassword,
+			isAdmin
+		);
 
-		okResponse(res, 'User signed up successfully');
+		const token = generateJwtToken(user);
+		console.log('User signup success');
+
+		okResponse(res, { token });
 	} catch (e) {
 		console.error('Failed creating user', e);
 		internalServerErrorResponse(res);
@@ -39,19 +47,27 @@ export const signup = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
 	try {
-		const { email, password } = req.body as LoginUserRequest;
-		console.log(`Logging in user: ${email}`);
-
 		const userModel = new UserModel(req.db);
-		const user = await userModel.getUserByEmail(email);
-		const isMatching = await isUserPasswordMatching(user, password);
 
+		const { email, password } = req.body as LoginUserRequest;
+		console.log(`Trying to login user: ${email}`);
+
+		const user = await userModel.getUserByEmail(email);
+		if (!user) {
+			unauthorizedResponse(res, 'User email or password are incorrect');
+			return;
+		}
+
+		const isMatching = await isUserPasswordMatching(user, password);
 		if (!isMatching) {
 			unauthorizedResponse(res, 'User email or password are incorrect');
 			return;
 		}
 
-		okResponse(res, 'Login successfull');
+		const token = generateJwtToken(user);
+		console.log('User login Success');
+
+		okResponse(res, { token });
 	} catch (e) {
 		console.error('Failed login user', e);
 		internalServerErrorResponse(res);
