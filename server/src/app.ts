@@ -1,4 +1,4 @@
-import { bootstrapDb } from './infrastructure/dbBuilder';
+import { bootstrapDb } from './deprecated/dbBuilder';
 import 'reflect-metadata';
 import { initializeDb } from './infrastructure/testFile';
 
