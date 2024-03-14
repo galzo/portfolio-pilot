@@ -1,15 +1,14 @@
 import { Request, Response } from 'express';
 import { UserModel } from '../models/userModel';
-import { comparePassword, hashPassword } from '../common/passwordUtils';
+import { hashPassword } from '../common/passwordUtils';
 import {
 	internalServerErrorResponse,
-	notFoundResponse,
 	okResponse,
 	unauthorizedResponse,
 } from '../common/responseUtils';
 import { isUserPasswordMatching } from '../common/userUtils';
 
-interface CreateUserRequest {
+interface SignupRequest {
 	name: string;
 	email: string;
 	password: string;
@@ -21,9 +20,9 @@ interface LoginUserRequest {
 	password: string;
 }
 
-export const createUser = async (req: Request, res: Response) => {
+export const signup = async (req: Request, res: Response) => {
 	try {
-		const { name, email, password, isAdmin } = req.body as CreateUserRequest;
+		const { name, email, password, isAdmin } = req.body as SignupRequest;
 
 		console.log(`Creating new user: ${email}`);
 		const userModel = new UserModel(req.db);
