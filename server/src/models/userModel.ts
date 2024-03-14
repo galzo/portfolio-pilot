@@ -1,14 +1,8 @@
-import { DataSource } from 'typeorm';
 import { User } from '../entities/user';
 import { hashPassword } from '../infrastructure/passwordManager';
+import { BaseModel } from './baseModel';
 
-export class UserModel {
-	private db: DataSource;
-
-	constructor(db: DataSource) {
-		this.db = db;
-	}
-
+export class UserModel extends BaseModel {
 	insertUser = async (
 		name: string,
 		email: string,
@@ -16,8 +10,12 @@ export class UserModel {
 		isAdmin: boolean
 	) => {
 		const user = await this.buildUserEntity(name, email, password, isAdmin);
-		return this.db.getRepository(User).save(user);
+		return this.userRepo.save(user);
 	};
+
+	private get userRepo() {
+		return this.db.getRepository(User);
+	}
 
 	private buildUserEntity = async (
 		name: string,
