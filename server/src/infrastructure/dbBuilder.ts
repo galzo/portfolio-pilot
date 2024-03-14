@@ -7,33 +7,28 @@ import {
 	createPortfolioTableCmd,
 	createStockTableCmd,
 	createUserTableCmd,
-	insertAdminUserCmd,
+	insertUserCmd,
 } from './dbQueryBuilder';
+import { AppDatabase } from './database';
+import { UserModel } from '../models/userModel';
+import { StockModel } from '../models/stockModel';
 
 const isDbInitialized = () => fs.existsSync(DB_SOURCE);
-const getDbInstance = () => new sqlite3.Database(DB_SOURCE);
 
-const initializeDb = () => {
+const initializeDb = async () => {
 	console.log('initializing db');
+	const db = new AppDatabase();
 
-	const db = getDbInstance();
-	db.serialize(() => {
+	db.serialize(async () => {
 		console.log('Setting up db tables...');
-		db.run(createUserTableCmd());
-		db.run(createStockTableCmd());
-		db.run(createPortfolioTableCmd());
-		db.run(createPortfolioStockTableCmd());
-		console.log('done setting up db tables.');
+		await new UserModel(db).createTable();
+		await new StockModel(db).createTable();
 	});
-
-	db.close();
 };
 
-const populateDbWithData = () => {
-	const db = getDbInstance();
-
+const populateDbWithData = (db: sqlite3.Database) => {
 	console.log('Setting up basic db data');
-	db.run(insertAdminUserCmd(), [
+	db.run(insertUserCmd(), [
 		ADMIN_USER_DETAILS.name,
 		ADMIN_USER_DETAILS.email,
 		hashPassword(ADMIN_USER_DETAILS.password),
@@ -51,5 +46,5 @@ export const bootstrapDb = async () => {
 	}
 
 	initializeDb();
-	populateDbWithData();
+	// populateDbWithData();
 };
