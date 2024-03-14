@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
 import { UserModel } from '../models/userModel';
-import { hashPassword } from '../common/passwordUtils';
+import { hashPassword } from '../utils/passwordUtils';
 import {
 	internalServerErrorResponse,
 	okResponse,
 	unauthorizedResponse,
-} from '../common/responseUtils';
-import { isUserPasswordMatching } from '../common/userUtils';
+} from '../utils/responseUtils';
+import { isUserPasswordMatching } from '../utils/userUtils';
 
 interface SignupRequest {
 	name: string;

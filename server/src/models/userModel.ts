@@ -1,5 +1,5 @@
 import { User } from '../entities/user';
-import { hashPassword } from '../common/passwordUtils';
+import { hashPassword } from '../utils/passwordUtils';
 import { BaseModel } from './baseModel';
 
 export class UserModel extends BaseModel {
