@@ -21,6 +21,7 @@ export const authenticate = async (
 		const userOnDb = await userModel.getUserById(userDetails.userId);
 		if (!userOnDb) {
 			unauthorizedResponse(res);
+			return;
 		}
 
 		req.user = userOnDb;
