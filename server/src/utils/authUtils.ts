@@ -9,7 +9,9 @@ export interface JwtUserDetails {
 
 export const generateJwtToken = (user: User): string => {
 	const payload: JwtUserDetails = { userId: user.id };
-	return jwt.sign(payload, _getJwtSecretKey());
+	return jwt.sign(payload, _getJwtSecretKey(), {
+		expiresIn: '2 days',
+	});
 };
 
 export const decodeJwtToken = (token: string): JwtUserDetails => {
