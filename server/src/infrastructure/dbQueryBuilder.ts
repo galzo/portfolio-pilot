@@ -14,8 +14,18 @@ export const createStockTableCmd = () =>
         ticker TEXT NOT NULL)';
 
 export const createPortfolioTableCmd = () =>
-	'CREATE TABLE Portfolio (\
-    id INTEGER PRIMARY KEY AUTOINCREMENT,\
-    name TEXT NOT NULL,\
-    user_id INTEGER,\
-    FOREIGN KEY (user_id) REFERENCES User(id))';
+	'CREATE TABLE IF NOT EXISTS Portfolio (\
+        id INTEGER PRIMARY KEY AUTOINCREMENT,\
+        name TEXT NOT NULL,\
+        cash DECIMAL NOT NULL,\
+        user_id INTEGER,\
+        FOREIGN KEY (user_id) REFERENCES User(id))';
+
+export const createPortfolioStockTableCmd = () =>
+	'CREATE TABLE IF NOT EXISTS PortfolioStock (\
+        id INTEGER PRIMARY KEY AUTOINCREMENT,\
+        portfolio_id INTEGER,\
+        stock_id INTEGER,\
+        amount INTEGER NOT NULL,\
+        FOREIGN KEY (portfolio_id) REFERENCES Portfolio(id),\
+        FOREIGN KEY (stock_id) REFERENCES Stock(id))';
