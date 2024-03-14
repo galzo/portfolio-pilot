@@ -1,11 +1,12 @@
 import { DataSource } from 'typeorm';
 import fs from 'fs';
-import { DB_SOURCE } from '../common/constants';
+import { AdminUserDbData, DB_SOURCE, StocksDbData } from '../common/constants';
 import { Stock } from '../entities/stock';
 import { Portfolio } from '../entities/portfolio';
 import { PortfolioStock } from '../entities/portfolioStock';
 import { User } from '../entities/user';
 import { StockModel } from '../models/stockModel';
+import { UserModel } from '../models/userModel';
 
 const isDbAlreadyCreated = () => fs.existsSync(DB_SOURCE);
 
@@ -25,11 +26,19 @@ const initDbInstance = async () => {
 
 const populateDb = async (db: DataSource) => {
 	console.log('Running initial db data population...');
+
+	const userModel = new UserModel(db);
+	userModel.insertUser(
+		AdminUserDbData.name,
+		AdminUserDbData.email,
+		AdminUserDbData.password,
+		AdminUserDbData.isAdmin
+	);
+
 	const stockModel = new StockModel(db);
-	const stock = new Stock();
-	stock.name = 'apple';
-	stock.ticker = 'AAPL';
-	await stockModel.insertStock(stock);
+	StocksDbData.forEach(async (stock) => {
+		await stockModel.insertStock(stock.name, stock.ticker);
+	});
 };
 
 export const bootstrapDb = async () => {

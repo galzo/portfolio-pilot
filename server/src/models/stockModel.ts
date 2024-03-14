@@ -8,6 +8,15 @@ export class StockModel {
 		this.db = db;
 	}
 
-	insertStock = async (stock: Stock) =>
-		this.db.getRepository(Stock).save(stock);
+	insertStock = async (name: string, ticker: string): Promise<Stock> => {
+		const stock = this.buildStockEntity(name, ticker);
+		return this.db.getRepository(Stock).save(stock);
+	};
+
+	private buildStockEntity = (name: string, ticker: string): Stock => {
+		const stock = new Stock();
+		stock.name = name;
+		stock.ticker = ticker;
+		return stock;
+	};
 }
