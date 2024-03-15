@@ -53,7 +53,7 @@ const _createPortfolioForNewUser = async (req: Request, user: User) => {
 
 	// Pick positions to open within the new portfolio
 	const allStocks = await stockModel.getAllStocks();
-	const positionsToOpen = pickRandomPositions(1, 4, allStocks);
+	const positionsToOpen = pickRandomPositions(1, 100, allStocks);
 
 	// Open a new portfolio
 	const portfolio = await portfolioModel.insertPortfolio(
@@ -63,11 +63,13 @@ const _createPortfolioForNewUser = async (req: Request, user: User) => {
 	);
 
 	// populate it with stocks
-	await portfolioStockModel.insertPortfolioStock(
-		positionsToOpen[0].amount,
-		positionsToOpen[0].stock,
-		portfolio
-	);
+	positionsToOpen.forEach(async (position) => {
+		await portfolioStockModel.insertPortfolioStock(
+			position.amount,
+			position.stock,
+			portfolio
+		);
+	});
 };
 
 export const signup = async (req: Request, res: Response) => {

@@ -24,5 +24,5 @@ export class Portfolio {
 	cash: number;
 
 	@OneToMany(() => PortfolioStock, (portfolioStock) => portfolioStock.portfolio)
-	stocks: PortfolioStock[];
+	portfolioStocks: PortfolioStock[];
 }

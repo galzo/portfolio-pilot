@@ -13,10 +13,7 @@ export const pickRandomPositions = (
 	maxAmountForPosition: number,
 	allStocks: Stock[]
 ) => {
-	const numOfPositions = generateRandomNumber(
-		minAmountForPosition,
-		maxAmountForPosition
-	);
+	const numOfPositions = generateRandomNumber(1, 4);
 	const stocksPicked = pickRandomStocks(allStocks, numOfPositions);
 	return stocksPicked.map((stock) => ({
 		stock,

@@ -1,5 +1,6 @@
 // Stock.ts
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { PortfolioStock } from './portfolioStock';
 
 @Entity()
 export class Stock {
@@ -11,4 +12,7 @@ export class Stock {
 
 	@Column('text')
 	ticker: string;
+
+	@OneToMany(() => PortfolioStock, (portfolioStock) => portfolioStock.stock)
+	portfolioStocks: PortfolioStock[];
 }

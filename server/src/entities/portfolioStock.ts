@@ -16,9 +16,9 @@ export class PortfolioStock {
 	@Column('integer')
 	amount: number;
 
-	@ManyToOne(() => Portfolio, (portfolio) => portfolio.stocks)
+	@ManyToOne(() => Portfolio, (portfolio) => portfolio.portfolioStocks)
 	portfolio: Portfolio;
 
-	@OneToOne(() => Stock, (stock) => stock)
+	@ManyToOne(() => Stock, (stock) => stock.portfolioStocks)
 	stock: Stock;
 }
