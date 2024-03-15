@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { ApiRoutes } from "../consts/api";
 import { AuthService } from "../services/authService";
 import { ApiResponse } from "../types/api.types";
@@ -35,9 +35,14 @@ const signup = async (payload: SignupRequest): Promise<ApiResponse<SignupRespons
 
     console.log("Signup complete");
     return { isSuccess: true, payload: response.data };
-  } catch (e: any) {
+  } catch (e: unknown) {
     console.error("Error signing up", e);
-    return { isSuccess: false, error: e.message };
+
+    if (e instanceof AxiosError) {
+      return { isSuccess: false, error: e.response?.data.error };
+    } else {
+      return { isSuccess: false, error: (e as any).message };
+    }
   }
 };
 

@@ -21,6 +21,9 @@ export const SignupCard = () => {
           {"Sign Up"}
         </Typography>
       </Box>
+      {errors.apiError && (
+        <Typography sx={combineStyles(styles.errorText, styles.marginBottom)}>{errors.apiError}</Typography>
+      )}
       <TextField
         sx={combineStyles(styles.input, styles.marginBottom)}
         onChange={(event) => callbacks.handleEmailChange(event.target.value)}
@@ -31,8 +34,8 @@ export const SignupCard = () => {
         label="Email"
         variant="outlined"
         type="email"
-        error={Boolean(errors.error || errors.emailError)}
-        helperText={errors.error || errors.emailError}
+        error={Boolean(errors.emailError)}
+        helperText={errors.emailError}
       />
       <TextField
         sx={combineStyles(styles.input, styles.marginBottom)}
@@ -43,7 +46,7 @@ export const SignupCard = () => {
         label="User Name"
         variant="outlined"
         type="text"
-        error={Boolean(errors.error || errors.nameError)}
+        error={Boolean(errors.nameError)}
         helperText={errors.nameError}
       />
       <TextField
@@ -56,7 +59,7 @@ export const SignupCard = () => {
         type="password"
         fullWidth={true}
         autoComplete="current-password"
-        error={Boolean(errors.error || errors.passwordError)}
+        error={Boolean(errors.passwordError)}
         helperText={errors.passwordError}
       />
       <Button

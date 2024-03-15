@@ -27,6 +27,9 @@ export const useSignupCardStyles = createStyleHook((theme) => {
       height: "40px",
       borderRadius: "100%",
     },
+    errorText: {
+      color: theme.palette.error.main,
+    },
     signupText: {
       color: theme.palette.text.primary,
     },

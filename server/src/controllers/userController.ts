@@ -40,7 +40,10 @@ export const signup = async (req: Request, res: Response) => {
 
 		const userExists = await userModel.getUserByEmail(email);
 		if (userExists) {
-			conflictResponse(res, 'User email already exists');
+			conflictResponse(
+				res,
+				'User already exists, please try another email or login'
+			);
 			return;
 		}
 

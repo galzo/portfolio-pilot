@@ -4,8 +4,11 @@ import { SignupResponse, UserApi } from "../../api/user.api";
 import { UserContext } from "../../contexts/UserContext/UserContext";
 import { ApiResponse } from "../../types/api.types";
 import { resolveTokenFromSignupResponse, resolveUserFromSignupResponse } from "../../utils/apiUtils";
+import { useNavigate } from "react-router-dom";
+import { AppRoutes } from "../../consts/routes";
 
 export const useSignup = () => {
+  const navigate = useNavigate();
   const { setToken, setUser } = useContext(UserContext);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -17,6 +20,13 @@ export const useSignup = () => {
   const [passwordError, setPasswordError] = useState("");
   const [apiError, setApiError] = useState("");
 
+  const clearErrors = useCallback(() => {
+    setEmailError("");
+    setNameError("");
+    setPasswordError("");
+    setApiError("");
+  }, []);
+
   const handleResponsePayload = useCallback(
     (response: ApiResponse<SignupResponse>) => {
       if (response.isSuccess) {
@@ -24,11 +34,12 @@ export const useSignup = () => {
         const token = resolveTokenFromSignupResponse(response.payload);
         setUser(user);
         setToken(token);
+        navigate(AppRoutes.portfolio);
       } else {
         setApiError(response.error);
       }
     },
-    [setToken, setUser]
+    [navigate, setToken, setUser]
   );
 
   const handleInputValidation = useCallback(() => {
@@ -66,6 +77,8 @@ export const useSignup = () => {
   }, []);
 
   const handleSubmit = useCallback(async () => {
+    clearErrors();
+
     const isValid = handleInputValidation();
     if (!isValid) return;
 
@@ -73,7 +86,7 @@ export const useSignup = () => {
     const response = await UserApi.signup({ email: email, name: name, password: password, isAdmin: false });
     handleResponsePayload(response);
     setIsLoading(false);
-  }, [email, handleInputValidation, handleResponsePayload, name, password]);
+  }, [clearErrors, email, handleInputValidation, handleResponsePayload, name, password]);
 
   const handleKeypress = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -97,7 +110,7 @@ export const useSignup = () => {
       emailError,
       passwordError,
       nameError,
-      error: apiError,
+      apiError,
     },
     callbacks: {
       handleEmailChange,
