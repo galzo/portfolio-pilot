@@ -4,6 +4,7 @@ import { createStyleHook } from "../hooks/styleHooks";
 import { Box, Typography } from "@mui/material";
 import firstAnim from "../assets/animations/thirdAnim.json";
 import { Player } from "@lottiefiles/react-lottie-player";
+import { AppTitle } from "../components/AppTitle/AppTitle";
 
 const useHomePageStyles = createStyleHook((theme) => {
   return {
@@ -23,15 +24,7 @@ export const HomePage = () => {
   return (
     <PageContainer>
       <Box sx={styles.root}>
-        <Player
-          autoplay={true}
-          src={firstAnim}
-          loop={true}
-          style={{
-            width: "300px",
-            marginBottom: "100px",
-          }}
-        />
+        <AppTitle />
         <LoginCard />
       </Box>
     </PageContainer>
