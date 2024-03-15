@@ -76,6 +76,7 @@ export const LoginCard = () => {
         required={true}
         type="password"
         fullWidth={true}
+        error={true}
         autoComplete="current-password"
       />
       <Button type="submit" fullWidth variant="contained" color="primary" sx={styles.marginBottom}>

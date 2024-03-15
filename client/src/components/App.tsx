@@ -4,6 +4,7 @@ import { createStyleHook } from "../hooks/styleHooks";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AppRoutes } from "../consts/routes";
 import { HomePage } from "../pages/Homepage";
+import { UserContextProvider } from "../contexts/UserContext/UserContext.provider";
 
 const useAppStyles = createStyleHook(() => {
   return {
@@ -24,13 +25,15 @@ export const App = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={styles.root}>
-        <BrowserRouter>
-          <Routes>
-            <Route path={AppRoutes.root} element={<HomePage />} />
-          </Routes>
-        </BrowserRouter>
-      </Box>
+      <UserContextProvider>
+        <Box sx={styles.root}>
+          <BrowserRouter>
+            <Routes>
+              <Route path={AppRoutes.root} element={<HomePage />} />
+            </Routes>
+          </BrowserRouter>
+        </Box>
+      </UserContextProvider>
     </ThemeProvider>
   );
 };
