@@ -13,6 +13,14 @@ export const okResponse = (response: Response, payload: unknown) => {
 	response.status(200).json(payload);
 };
 
+export const conflictResponse = (
+	response: Response,
+	message: string = 'Conflict'
+) => {
+	console.warn(`Returning (409) Response. message: ${message}`);
+	response.status(409).json({ error: message });
+};
+
 export const notFoundResponse = (
 	response: Response,
 	message: string = 'Not Found'

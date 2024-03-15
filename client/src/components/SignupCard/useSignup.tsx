@@ -34,18 +34,20 @@ export const useSignup = () => {
   const handleInputValidation = useCallback(() => {
     if (!isEmailAddressValid(email)) {
       setEmailError("Please fill in a valid email address");
-      return;
+      return false;
     }
 
     if (!isNameValid(name)) {
       setNameError("Please fill in a valid user name");
-      return;
+      return false;
     }
 
     if (!isPasswordValid(password)) {
       setPasswordError("Please fill in a password");
-      return;
+      return false;
     }
+
+    return true;
   }, [email, name, password]);
 
   const handleNameChange = useCallback((name: string) => {
@@ -64,7 +66,8 @@ export const useSignup = () => {
   }, []);
 
   const handleSubmit = useCallback(async () => {
-    handleInputValidation();
+    const isValid = handleInputValidation();
+    if (!isValid) return;
 
     setIsLoading(true);
     const response = await UserApi.signup({ email: email, name: name, password: password, isAdmin: false });

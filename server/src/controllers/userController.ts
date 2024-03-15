@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { UserModel } from '../models/userModel';
 import { hashPassword } from '../utils/passwordUtils';
 import {
+	conflictResponse,
 	internalServerErrorResponse,
 	okResponse,
 	unauthorizedResponse,
@@ -36,6 +37,13 @@ export const signup = async (req: Request, res: Response) => {
 		console.log(`Trying to signup user: ${email}`);
 		const userModel = new UserModel(req.db);
 		const hashedPassword = await hashPassword(password);
+
+		const userExists = await userModel.getUserByEmail(email);
+		if (userExists) {
+			conflictResponse(res, 'User email already exists');
+			return;
+		}
+
 		const user = await userModel.insertUser(
 			name,
 			email,
