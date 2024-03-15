@@ -23,11 +23,12 @@ const usePortfolioPageStyles = createStyleHook((theme) => {
 
 export const PortfolioPage = () => {
   const styles = usePortfolioPageStyles();
-  const { getUser, getToken, isLoggedIn } = useAuth();
+  const { getUser, getToken, isLoggedIn, isAdmin } = useAuth();
   useRedirect({ predicate: () => !isLoggedIn(), redirectTo: AppRoutes.login });
+  useRedirect({ predicate: () => isAdmin(), redirectTo: AppRoutes.admin });
 
-  // Block user from seeting this page if they're logged in
-  if (!isLoggedIn()) {
+  // Block user from seeting this page if they're not logged in or they're admin
+  if (!isLoggedIn() || isAdmin()) {
     return null;
   }
 
