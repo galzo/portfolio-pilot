@@ -3,6 +3,7 @@ import { createStyleHook } from "../../hooks/styleHooks";
 
 import phoneAnimation from "../../assets/animations/thirdAnim.json";
 import { Player } from "@lottiefiles/react-lottie-player";
+import { useWindowSize } from "../../hooks/useWindowSize";
 
 const useAppTitleStyles = createStyleHook((theme) => {
   return {
@@ -11,7 +12,7 @@ const useAppTitleStyles = createStyleHook((theme) => {
       flexDirection: "column",
       color: theme.palette.text.primary,
       fontFamily: "roboto",
-      marginBottom: "50px",
+      marginBottom: "20px",
     },
     textContainer: {
       display: "flex",
@@ -21,6 +22,7 @@ const useAppTitleStyles = createStyleHook((theme) => {
 });
 
 export const AppTitle = () => {
+  const windowSize = useWindowSize();
   const styles = useAppTitleStyles();
   const theme = useTheme();
   return (
@@ -30,7 +32,7 @@ export const AppTitle = () => {
         src={phoneAnimation}
         loop={true}
         style={{
-          width: "300px",
+          width: windowSize.innerWidth >= 800 ? "300px" : "150px",
         }}
       />
       <Box component={"span"} sx={styles.textContainer}>

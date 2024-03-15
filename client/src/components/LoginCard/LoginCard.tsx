@@ -1,10 +1,11 @@
 import React from "react";
 import { createStyleHook } from "../../hooks/styleHooks";
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Button, Link, TextField, Typography, useTheme } from "@mui/material";
 import { AppColors } from "../../consts/colors";
 import { IconLock } from "@tabler/icons-react";
 import firstAnim from "../../assets/animations/firstAnim.json";
 import { Player } from "@lottiefiles/react-lottie-player";
+import { combineStyles } from "../../utils/styleUtils";
 
 const useLoginCardStyles = createStyleHook((theme) => {
   return {
@@ -33,8 +34,14 @@ const useLoginCardStyles = createStyleHook((theme) => {
       height: "40px",
       borderRadius: "100%",
     },
-    text: {
+    signInText: {
       color: theme.palette.text.primary,
+    },
+    input: {
+      height: "56px",
+    },
+    marginBottom: {
+      marginBottom: "24px",
     },
   };
 });
@@ -45,14 +52,38 @@ export const LoginCard = () => {
 
   return (
     <Box sx={styles.root}>
-      <Box sx={styles.titleContainer}>
+      <Box sx={combineStyles(styles.titleContainer, styles.marginBottom)}>
         <Box sx={styles.icon}>
           <IconLock color={theme.palette.background.default} strokeWidth={2} />
         </Box>
-        <Typography sx={styles.text} variant="h5">
+        <Typography sx={styles.signInText} variant="h5">
           {"Sign in"}
         </Typography>
       </Box>
+      <TextField
+        sx={combineStyles(styles.input, styles.marginBottom)}
+        fullWidth={true}
+        label="Email"
+        variant="outlined"
+        required={true}
+        type="email"
+        autoFocus={true}
+      />
+      <TextField
+        sx={combineStyles(styles.input, styles.marginBottom)}
+        label="Password"
+        variant="outlined"
+        required={true}
+        type="password"
+        fullWidth={true}
+        autoComplete="current-password"
+      />
+      <Button type="submit" fullWidth variant="contained" color="primary" sx={styles.marginBottom}>
+        Sign In
+      </Button>
+      <Link href="#" variant="body2">
+        {"Don't have an account? Sign Up"}
+      </Link>
     </Box>
   );
 };
