@@ -3,4 +3,5 @@ export const AppRoutes = {
   login: "/login",
   signup: "/signup",
   portfolio: "/portfolio",
+  admin: "/admin",
 };

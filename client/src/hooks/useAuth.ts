@@ -35,6 +35,11 @@ export const useAuth = () => {
     return Boolean(user && token);
   };
 
+  const isAdmin = () => {
+    const user = getUser();
+    return user?.isAdmin ?? false;
+  };
+
   return {
     getUser,
     setUser,
@@ -42,5 +47,6 @@ export const useAuth = () => {
     setToken,
     clear,
     isLoggedIn,
+    isAdmin,
   };
 };

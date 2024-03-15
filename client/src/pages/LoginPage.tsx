@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { AppRoutes } from "../consts/routes";
 import { useEffect } from "react";
-import { useSignedInRedirect } from "../hooks/useRedirect";
+import { useRedirect } from "../hooks/useRedirect";
 
 const useLoginPageStyles = createStyleHook((theme) => {
   return {
@@ -25,7 +25,7 @@ const useLoginPageStyles = createStyleHook((theme) => {
 export const LoginPage = () => {
   const styles = useLoginPageStyles();
   const { isLoggedIn } = useAuth();
-  useSignedInRedirect({ redirectTo: AppRoutes.portfolio });
+  useRedirect({ predicate: () => isLoggedIn(), redirectTo: AppRoutes.portfolio });
 
   // Block user from seeting this page if they're logged in
   if (isLoggedIn()) {

@@ -5,7 +5,7 @@ import { Box, Typography } from "@mui/material";
 import { AppTitle } from "../components/AppTitle/AppTitle";
 import { useContext, useEffect } from "react";
 import { useAuth } from "../hooks/useAuth";
-import { useSignedOutRedirect } from "../hooks/useRedirect";
+import { useRedirect } from "../hooks/useRedirect";
 import { AppRoutes } from "../consts/routes";
 
 const usePortfolioPageStyles = createStyleHook((theme) => {
@@ -24,7 +24,7 @@ const usePortfolioPageStyles = createStyleHook((theme) => {
 export const PortfolioPage = () => {
   const styles = usePortfolioPageStyles();
   const { getUser, getToken, isLoggedIn } = useAuth();
-  useSignedOutRedirect({ redirectTo: AppRoutes.login });
+  useRedirect({ predicate: () => !isLoggedIn(), redirectTo: AppRoutes.login });
 
   // Block user from seeting this page if they're logged in
   if (!isLoggedIn()) {
