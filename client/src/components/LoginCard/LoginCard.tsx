@@ -1,54 +1,54 @@
-import React from "react";
-import { createStyleHook } from "../../hooks/styleHooks";
 import { Box, Button, Link, TextField, Typography, useTheme } from "@mui/material";
-import { AppColors } from "../../consts/colors";
 import { IconLock } from "@tabler/icons-react";
-import firstAnim from "../../assets/animations/firstAnim.json";
-import { Player } from "@lottiefiles/react-lottie-player";
 import { combineStyles } from "../../utils/styleUtils";
-
-const useLoginCardStyles = createStyleHook((theme) => {
-  return {
-    root: {
-      width: "476px",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: theme.palette.background.paper,
-      padding: "20px",
-      boxShadow: "0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)",
-    },
-    titleContainer: {
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    icon: {
-      backgroundColor: theme.palette.secondary.main,
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      width: "40px",
-      height: "40px",
-      borderRadius: "100%",
-    },
-    signInText: {
-      color: theme.palette.text.primary,
-    },
-    input: {
-      height: "56px",
-    },
-    marginBottom: {
-      marginBottom: "24px",
-    },
-  };
-});
+import { useLoginCardStyles } from "./LoginCard.styles";
+import { useCallback, useState } from "react";
+import { isEmailAddressValid, isPasswordValid } from "../../utils/inputUtils";
 
 export const LoginCard = () => {
   const styles = useLoginCardStyles();
   const theme = useTheme();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  const [error, setError] = useState("");
+
+  const handleEmailChange = useCallback((email: string) => {
+    setEmailError("");
+    setEmail(email);
+  }, []);
+
+  const handlePasswordChange = useCallback((password: string) => {
+    setPasswordError("");
+    setPassword(password);
+  }, []);
+
+  const handleSubmit = useCallback(() => {
+    if (!isEmailAddressValid(email)) {
+      setEmailError("Please fill in a valid email address");
+      return;
+    }
+
+    if (!isPasswordValid(password)) {
+      setPasswordError("Please fill in a password");
+      return;
+    }
+  }, [email, password]);
+
+  const handleKeypress = useCallback(
+    (event: React.KeyboardEvent<HTMLDivElement>) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        event.stopPropagation();
+        handleSubmit();
+      }
+    },
+    [handleSubmit]
+  );
 
   return (
     <Box sx={styles.root}>
@@ -62,24 +62,38 @@ export const LoginCard = () => {
       </Box>
       <TextField
         sx={combineStyles(styles.input, styles.marginBottom)}
+        onChange={(event) => handleEmailChange(event.target.value)}
+        onKeyDown={handleKeypress}
         fullWidth={true}
+        required={true}
+        autoFocus={true}
         label="Email"
         variant="outlined"
-        required={true}
         type="email"
-        autoFocus={true}
+        error={Boolean(error || emailError)}
+        helperText={error || emailError}
       />
       <TextField
         sx={combineStyles(styles.input, styles.marginBottom)}
+        onChange={(event) => handlePasswordChange(event.target.value)}
+        onKeyDown={handleKeypress}
         label="Password"
         variant="outlined"
         required={true}
         type="password"
         fullWidth={true}
-        error={true}
         autoComplete="current-password"
+        error={Boolean(error || passwordError)}
+        helperText={passwordError}
       />
-      <Button type="submit" fullWidth variant="contained" color="primary" sx={styles.marginBottom}>
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        color="primary"
+        sx={styles.marginBottom}
+        onClick={handleSubmit}
+      >
         Sign In
       </Button>
       <Link href="#" variant="body2">

@@ -1,5 +1,4 @@
-import { Box, ThemeProvider } from "@mui/material";
-import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { AppRoutes } from "../../consts/routes";
 import { HomePage } from "../../pages/Homepage";
 import { useContext, useEffect } from "react";
