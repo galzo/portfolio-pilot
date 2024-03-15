@@ -10,7 +10,13 @@ import {
 import { isUserPasswordMatching } from '../utils/userUtils';
 import { generateJwtToken } from '../utils/authUtils';
 import { PortfolioModel } from '../models/portfolioModel';
-import { generateRandomNumber } from '../utils/portfolioUtils';
+import {
+	generateRandomNumber,
+	pickRandomPositions,
+} from '../utils/portfolioUtils';
+import { StockModel } from '../models/stockModel';
+import { PortfolioStockModel } from '../models/portfolioStockModel';
+import { User } from '../entities/user';
 
 interface SignupRequest {
 	name: string;
@@ -40,14 +46,36 @@ interface LoginResponse {
 	token: string;
 }
 
+const _createPortfolioForNewUser = async (req: Request, user: User) => {
+	const portfolioModel = new PortfolioModel(req.db);
+	const stockModel = new StockModel(req.db);
+	const portfolioStockModel = new PortfolioStockModel(req.db);
+
+	// Pick positions to open within the new portfolio
+	const allStocks = await stockModel.getAllStocks();
+	const positionsToOpen = pickRandomPositions(1, 4, allStocks);
+
+	// Open a new portfolio
+	const portfolio = await portfolioModel.insertPortfolio(
+		`${user.name}'s Portfolio`,
+		generateRandomNumber(1000, 10000),
+		user
+	);
+
+	// populate it with stocks
+	await portfolioStockModel.insertPortfolioStock(
+		positionsToOpen[0].amount,
+		positionsToOpen[0].stock,
+		portfolio
+	);
+};
+
 export const signup = async (req: Request, res: Response) => {
 	try {
 		const { name, email, password, isAdmin } = req.body as SignupRequest;
-
 		console.log(`Trying to signup user: ${email}`);
-		const userModel = new UserModel(req.db);
-		const portfolioModel = new PortfolioModel(req.db);
 
+		const userModel = new UserModel(req.db);
 		const hashedPassword = await hashPassword(password);
 		const userExists = await userModel.getUserByEmail(email);
 		if (userExists) {
@@ -65,11 +93,7 @@ export const signup = async (req: Request, res: Response) => {
 			isAdmin
 		);
 
-		await portfolioModel.insertPortfolio(
-			`${name}'s Portfolio`,
-			generateRandomNumber(1000, 10000),
-			user
-		);
+		await _createPortfolioForNewUser(req, user);
 
 		const responsePayload: SignupResponse = {
 			id: user.id,

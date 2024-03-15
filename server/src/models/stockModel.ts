@@ -4,10 +4,12 @@ import { BaseModel } from './baseModel';
 export class StockModel extends BaseModel {
 	insertStock = async (name: string, ticker: string): Promise<Stock> => {
 		const stock = this.buildStockEntity(name, ticker);
-		return this.db.getRepository(Stock).save(stock);
+		return this.stockRepo.save(stock);
 	};
 
-	private get StockRepo() {
+	getAllStocks = async (): Promise<Stock[]> => this.stockRepo.find();
+
+	private get stockRepo() {
 		return this.db.getRepository(Stock);
 	}
 
