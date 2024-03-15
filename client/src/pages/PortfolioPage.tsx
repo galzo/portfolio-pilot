@@ -4,7 +4,7 @@ import { createStyleHook } from "../hooks/styleHooks";
 import { Box, Typography } from "@mui/material";
 import { AppTitle } from "../components/AppTitle/AppTitle";
 import { useContext } from "react";
-import { UserContext } from "../contexts/UserContext/UserContext";
+import { useAuth } from "../hooks/useAuth";
 
 const usePortfolioPageStyles = createStyleHook((theme) => {
   return {
@@ -21,9 +21,9 @@ const usePortfolioPageStyles = createStyleHook((theme) => {
 
 export const PortfolioPage = () => {
   const styles = usePortfolioPageStyles();
-  const { user, token } = useContext(UserContext);
-  console.log("user", user);
-  console.log("token", token);
+  const { getUser, getToken } = useAuth();
+  console.log("user", getUser());
+  console.log("token", getToken());
   return (
     <PageContainer>
       <Box sx={styles.root}>

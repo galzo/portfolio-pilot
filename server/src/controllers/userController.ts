@@ -63,7 +63,7 @@ export const signup = async (req: Request, res: Response) => {
 		};
 
 		console.log('User signup success');
-		okResponse(res, { responsePayload });
+		okResponse(res, responsePayload);
 	} catch (e) {
 		console.error('Failed creating user', e);
 		internalServerErrorResponse(res);

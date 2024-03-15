@@ -1,11 +1,10 @@
 import { PageContainer } from "../components/PageContainer/PageContainer";
 import { createStyleHook } from "../hooks/styleHooks";
 import { Box } from "@mui/material";
-import { AppTitle } from "../components/AppTitle/AppTitle";
-import { useContext, useEffect } from "react";
-import { UserContext } from "../contexts/UserContext/UserContext";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "../consts/routes";
+import { useAuth } from "../hooks/useAuth";
 
 const useHomePageStyles = createStyleHook((theme) => {
   return {
@@ -22,15 +21,13 @@ const useHomePageStyles = createStyleHook((theme) => {
 
 export const HomePage = () => {
   const styles = useHomePageStyles();
-  const { user, token, isInit } = useContext(UserContext);
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
-    if (isInit) {
-      const hasNoUser = !user || !token;
-      if (hasNoUser) navigate(AppRoutes.login);
-    }
-  }, [isInit, navigate, token, user]);
+    const redirectRoute = isLoggedIn() ? AppRoutes.portfolio : AppRoutes.login;
+    navigate(redirectRoute);
+  }, [isLoggedIn, navigate]);
 
   return (
     <PageContainer>

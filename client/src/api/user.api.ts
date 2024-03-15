@@ -32,8 +32,8 @@ const signup = async (payload: SignupRequest): Promise<ApiResponse<SignupRespons
   try {
     console.log("Signing up user...", payload);
     const response = await axios.post<SignupResponse>(ApiRoutes.user.signup, payload);
-
     console.log("Signup complete");
+
     return { isSuccess: true, payload: response.data };
   } catch (e: unknown) {
     console.error("Error signing up", e);

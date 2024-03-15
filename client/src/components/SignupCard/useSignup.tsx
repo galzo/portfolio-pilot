@@ -1,15 +1,15 @@
 import { useCallback, useContext, useState } from "react";
 import { isEmailAddressValid, isNameValid, isPasswordValid } from "../../utils/inputUtils";
 import { SignupResponse, UserApi } from "../../api/user.api";
-import { UserContext } from "../../contexts/UserContext/UserContext";
 import { ApiResponse } from "../../types/api.types";
 import { resolveTokenFromSignupResponse, resolveUserFromSignupResponse } from "../../utils/apiUtils";
 import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "../../consts/routes";
+import { useAuth } from "../../hooks/useAuth";
 
 export const useSignup = () => {
   const navigate = useNavigate();
-  const { setToken, setUser } = useContext(UserContext);
+  const { setUser, setToken } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
