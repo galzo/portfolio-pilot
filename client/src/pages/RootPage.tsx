@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "../consts/routes";
 import { useAuth } from "../hooks/useAuth";
 
-const useHomePageStyles = createStyleHook((theme) => {
+const useRootPageStyles = createStyleHook((theme) => {
   return {
     root: {
       display: "flex",
@@ -19,8 +19,8 @@ const useHomePageStyles = createStyleHook((theme) => {
   };
 });
 
-export const HomePage = () => {
-  const styles = useHomePageStyles();
+export const RootPage = () => {
+  const styles = useRootPageStyles();
   const navigate = useNavigate();
   const { isLoggedIn } = useAuth();
 
