@@ -1,5 +1,9 @@
 import { Optional } from "../types/common.types";
 
+export const isNameValid = (name: Optional<string>) => {
+  return name && name.trim().length > 0;
+};
+
 export const isEmailAddressValid = (email: Optional<string>) => {
   if (!email || email.trim().length <= 0) return false;
 

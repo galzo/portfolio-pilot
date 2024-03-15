@@ -1,15 +1,21 @@
 import { useCallback, useState } from "react";
-import { isEmailAddressValid, isPasswordValid } from "../../utils/inputUtils";
+import { isEmailAddressValid, isNameValid, isPasswordValid } from "../../utils/inputUtils";
 import { UserApi } from "../../api/user.api";
 
-export const useLogin = () => {
+export const useSignup = () => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [nameError, setNameError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-
   const [error, setError] = useState("");
+
+  const handleNameChange = useCallback((name: string) => {
+    setNameError("");
+    setName(name);
+  }, []);
 
   const handleEmailChange = useCallback((email: string) => {
     setEmailError("");
@@ -27,13 +33,19 @@ export const useLogin = () => {
       return;
     }
 
+    if (!isNameValid(name)) {
+      setNameError("Please fill in a valid user name");
+      return;
+    }
+
     if (!isPasswordValid(password)) {
       setPasswordError("Please fill in a password");
       return;
     }
 
-    const isSuccess = await UserApi.login({ email: email, password: password });
-  }, [email, password]);
+    const isSuccess = await UserApi.signup({ email: email, name: name, password: password, isAdmin: false });
+    console.log("successss", isSuccess);
+  }, [email, name, password]);
 
   const handleKeypress = useCallback(
     (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -50,15 +62,18 @@ export const useLogin = () => {
     details: {
       email,
       password,
+      name,
     },
     errors: {
       emailError,
       passwordError,
+      nameError,
       error,
     },
     callbacks: {
       handleEmailChange,
       handlePasswordChange,
+      handleNameChange,
       handleSubmit,
       handleKeypress,
     },

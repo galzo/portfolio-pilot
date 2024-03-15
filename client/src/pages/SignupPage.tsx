@@ -2,6 +2,7 @@ import { Box } from "@mui/material";
 import { PageContainer } from "../components/PageContainer/PageContainer";
 import { createStyleHook } from "../hooks/styleHooks";
 import { AppTitle } from "../components/AppTitle/AppTitle";
+import { SignupCard } from "../components/SignupCard/SignupCard";
 
 const useSignupPageStyles = createStyleHook((theme) => {
   return {
@@ -22,6 +23,7 @@ export const SignupPage = () => {
     <PageContainer>
       <Box sx={styles.root}>
         <AppTitle />
+        <SignupCard />
       </Box>
     </PageContainer>
   );

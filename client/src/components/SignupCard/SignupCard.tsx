@@ -1,24 +1,24 @@
+import { useSignupCardStyles } from "./SignupCard.styles";
+import { useSignup } from "./useSignup";
 import { Box, Button, Link, TextField, Typography, useTheme } from "@mui/material";
-import { IconLock } from "@tabler/icons-react";
 import { combineStyles } from "../../utils/styleUtils";
-import { useLoginCardStyles } from "./LoginCard.styles";
-import { useLogin } from "./useLogin";
+import { IconLockHeart } from "@tabler/icons-react";
 import { AppRoutes } from "../../consts/routes";
 
-export const LoginCard = () => {
-  const styles = useLoginCardStyles();
+export const SignupCard = () => {
+  const styles = useSignupCardStyles();
   const theme = useTheme();
 
-  const { details, errors, callbacks } = useLogin();
+  const { details, errors, callbacks } = useSignup();
 
   return (
     <Box sx={styles.root}>
       <Box sx={combineStyles(styles.titleContainer, styles.marginBottom)}>
         <Box sx={styles.icon}>
-          <IconLock color={theme.palette.background.default} strokeWidth={2} />
+          <IconLockHeart color={theme.palette.background.default} strokeWidth={2} />
         </Box>
-        <Typography sx={styles.loginText} variant="h5">
-          {"Sign In"}
+        <Typography sx={styles.signupText} variant="h5">
+          {"Sign Up"}
         </Typography>
       </Box>
       <TextField
@@ -33,6 +33,18 @@ export const LoginCard = () => {
         type="email"
         error={Boolean(errors.error || errors.emailError)}
         helperText={errors.error || errors.emailError}
+      />
+      <TextField
+        sx={combineStyles(styles.input, styles.marginBottom)}
+        onChange={(event) => callbacks.handleNameChange(event.target.value)}
+        onKeyDown={callbacks.handleKeypress}
+        fullWidth={true}
+        required={true}
+        label="User Name"
+        variant="outlined"
+        type="text"
+        error={Boolean(errors.error || errors.nameError)}
+        helperText={errors.nameError}
       />
       <TextField
         sx={combineStyles(styles.input, styles.marginBottom)}
@@ -55,10 +67,10 @@ export const LoginCard = () => {
         sx={styles.marginBottom}
         onClick={callbacks.handleSubmit}
       >
-        Sign In
+        Sign Up
       </Button>
-      <Link href={AppRoutes.signup} variant="body2">
-        {"Don't have an account? Sign Up"}
+      <Link href={AppRoutes.login} variant="body2">
+        {"Already have an account? Sign In"}
       </Link>
     </Box>
   );

@@ -1,6 +1,6 @@
 import { createStyleHook } from "../../hooks/styleHooks";
 
-export const useLoginCardStyles = createStyleHook((theme) => {
+export const useSignupCardStyles = createStyleHook((theme) => {
   return {
     root: {
       width: "476px",
@@ -27,7 +27,7 @@ export const useLoginCardStyles = createStyleHook((theme) => {
       height: "40px",
       borderRadius: "100%",
     },
-    loginText: {
+    signupText: {
       color: theme.palette.text.primary,
     },
     input: {
