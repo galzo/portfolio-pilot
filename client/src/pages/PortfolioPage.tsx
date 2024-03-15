@@ -3,8 +3,10 @@ import { PageContainer } from "../components/PageContainer/PageContainer";
 import { createStyleHook } from "../hooks/styleHooks";
 import { Box, Typography } from "@mui/material";
 import { AppTitle } from "../components/AppTitle/AppTitle";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useAuth } from "../hooks/useAuth";
+import { useSignedOutRedirect } from "../hooks/useRedirect";
+import { AppRoutes } from "../consts/routes";
 
 const usePortfolioPageStyles = createStyleHook((theme) => {
   return {
@@ -21,9 +23,14 @@ const usePortfolioPageStyles = createStyleHook((theme) => {
 
 export const PortfolioPage = () => {
   const styles = usePortfolioPageStyles();
-  const { getUser, getToken } = useAuth();
-  console.log("user", getUser());
-  console.log("token", getToken());
+  const { getUser, getToken, isLoggedIn } = useAuth();
+  useSignedOutRedirect({ redirectTo: AppRoutes.login });
+
+  // Block user from seeting this page if they're logged in
+  if (!isLoggedIn()) {
+    return null;
+  }
+
   return (
     <PageContainer>
       <Box sx={styles.root}>
