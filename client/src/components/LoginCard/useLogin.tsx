@@ -32,8 +32,7 @@ export const useLogin = () => {
       return;
     }
 
-    const lolzy = await UserApi.login({ email: email, password: password });
-    console.log("RESULTS ARE", lolzy);
+    const isSuccess = await UserApi.login({ email: email, password: password });
   }, [email, password]);
 
   const handleKeypress = useCallback(

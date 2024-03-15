@@ -1,6 +1,8 @@
+const apiServerUrl = "http://localhost:3000";
+
 export const ApiRoutes = {
   user: {
-    signup: "/api/user/signup",
-    login: "/api/user/login",
+    signup: `${apiServerUrl}/api/user/signup`,
+    login: `${apiServerUrl}/api/user/login`,
   },
 };
