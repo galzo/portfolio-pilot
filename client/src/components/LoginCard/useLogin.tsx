@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { isEmailAddressValid, isPasswordValid } from "../../utils/inputUtils";
+import { UserApi } from "../../api/user.api";
 
 export const useLogin = () => {
   const [email, setEmail] = useState("");
@@ -20,7 +21,7 @@ export const useLogin = () => {
     setPassword(password);
   }, []);
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
     if (!isEmailAddressValid(email)) {
       setEmailError("Please fill in a valid email address");
       return;
@@ -30,6 +31,9 @@ export const useLogin = () => {
       setPasswordError("Please fill in a password");
       return;
     }
+
+    const lolzy = await UserApi.login({ email: email, password: password });
+    console.log("RESULTS ARE", lolzy);
   }, [email, password]);
 
   const handleKeypress = useCallback(
