@@ -23,7 +23,7 @@ export class AuthService {
   clearUserDetails = () => localStorage.removeItem(UserDetailsStorageKey);
 
   getUserDetails = (): Optional<User> => {
-    const user = localStorage.get(UserDetailsStorageKey);
+    const user = localStorage.getItem(UserDetailsStorageKey);
     return user ? (JSON.parse(user) as User) : null;
   };
 }

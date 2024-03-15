@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AppRoutes } from "../consts/routes";
 import { HomePage } from "../pages/Homepage";
 import { UserContextProvider } from "../contexts/UserContext/UserContext.provider";
+import { AppRouter } from "./AppRouter/AppRouter";
 
 const useAppStyles = createStyleHook(() => {
   return {
@@ -28,9 +29,7 @@ export const App = () => {
       <UserContextProvider>
         <Box sx={styles.root}>
           <BrowserRouter>
-            <Routes>
-              <Route path={AppRoutes.root} element={<HomePage />} />
-            </Routes>
+            <AppRouter />
           </BrowserRouter>
         </Box>
       </UserContextProvider>

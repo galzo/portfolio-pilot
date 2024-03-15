@@ -1,7 +1,7 @@
 import { Box, Typography, useTheme } from "@mui/material";
 import { createStyleHook } from "../../hooks/styleHooks";
 
-import phoneAnimation from "../../assets/animations/thirdAnim.json";
+import phoneAnimation from "../../assets/animations/phoneAnimation.json";
 import { Player } from "@lottiefiles/react-lottie-player";
 import { useWindowSize } from "../../hooks/useWindowSize";
 

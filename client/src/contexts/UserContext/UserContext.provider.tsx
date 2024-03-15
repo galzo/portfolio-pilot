@@ -11,6 +11,7 @@ export interface UserContextProviderProps {
 export const UserContextProvider: FC<UserContextProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User>();
   const [token, setToken] = useState<UserAuthToken>();
+  const [isInit, setIsInit] = useState(false);
 
   const authService = useMemo(() => {
     return new AuthService();
@@ -20,13 +21,12 @@ export const UserContextProvider: FC<UserContextProviderProps> = ({ children }) 
     const user = authService.getUserDetails();
     const token = authService.getAuthToken();
 
-    console.log("user", user);
-    console.log("token", token);
-
     if (user && token) {
       setUser(user);
       setToken(token);
     }
+
+    setIsInit(true);
   }, [authService]);
 
   const handleSetUser = useCallback(
@@ -50,6 +50,7 @@ export const UserContextProvider: FC<UserContextProviderProps> = ({ children }) 
     token: token,
     setToken: handleSetToken,
     setUser: handleSetUser,
+    isInit: isInit,
   };
 
   return <UserContext.Provider value={contextValue}>{children}</UserContext.Provider>;

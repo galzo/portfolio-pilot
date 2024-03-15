@@ -7,4 +7,5 @@ export const UserContext = createContext<UserContextType>({
   token: null,
   setUser: noop,
   setToken: noop,
+  isInit: false,
 });

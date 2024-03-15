@@ -6,4 +6,5 @@ export interface UserContextType {
   token: Optional<UserAuthToken>;
   setUser: (user: User) => void;
   setToken: (token: UserAuthToken) => void;
+  isInit: boolean;
 }

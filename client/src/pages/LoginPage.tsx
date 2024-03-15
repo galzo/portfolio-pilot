@@ -1,9 +1,10 @@
+import { LoginCard } from "../components/LoginCard/LoginCard";
 import { PageContainer } from "../components/PageContainer/PageContainer";
 import { createStyleHook } from "../hooks/styleHooks";
 import { Box } from "@mui/material";
 import { AppTitle } from "../components/AppTitle/AppTitle";
 
-const useHomePageStyles = createStyleHook((theme) => {
+const useLoginPageStyles = createStyleHook((theme) => {
   return {
     root: {
       display: "flex",
@@ -16,11 +17,14 @@ const useHomePageStyles = createStyleHook((theme) => {
   };
 });
 
-export const HomePage = () => {
-  const styles = useHomePageStyles();
+export const LoginPage = () => {
+  const styles = useLoginPageStyles();
   return (
     <PageContainer>
-      <Box sx={styles.root}></Box>
+      <Box sx={styles.root}>
+        <AppTitle />
+        <LoginCard />
+      </Box>
     </PageContainer>
   );
 };
