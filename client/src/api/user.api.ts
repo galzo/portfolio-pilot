@@ -3,6 +3,7 @@ import axios, { AxiosError } from "axios";
 import { ApiRoutes } from "../consts/api";
 import { AuthService } from "../services/authService";
 import { ApiResponse } from "../types/api.types";
+import { resolveApiErrorMessage } from "../utils/apiUtils";
 
 export interface SignupRequest {
   name: string;
@@ -25,6 +26,10 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
+  id: number;
+  name: string;
+  email: string;
+  isAdmin: boolean;
   token: string;
 }
 
@@ -37,27 +42,19 @@ const signup = async (payload: SignupRequest): Promise<ApiResponse<SignupRespons
     return { isSuccess: true, payload: response.data };
   } catch (e: unknown) {
     console.error("Error signing up", e);
-
-    if (e instanceof AxiosError) {
-      return { isSuccess: false, error: e.response?.data.error };
-    } else {
-      return { isSuccess: false, error: (e as any).message };
-    }
+    return { isSuccess: false, error: resolveApiErrorMessage(e) };
   }
 };
 
-const login = async (payload: LoginRequest) => {
+const login = async (payload: LoginRequest): Promise<ApiResponse<LoginResponse>> => {
   try {
     console.log("Logging in user...", payload);
-
     const response = await axios.post<LoginResponse>(ApiRoutes.user.login, payload);
-    const { token } = response.data;
+    console.log("Login complete");
 
-    console.log("Login complete", token);
-    return true;
-  } catch (e) {
-    console.error("Error logging in", e);
-    return false;
+    return { isSuccess: true, payload: response.data };
+  } catch (e: unknown) {
+    return { isSuccess: false, error: resolveApiErrorMessage(e) };
   }
 };
 

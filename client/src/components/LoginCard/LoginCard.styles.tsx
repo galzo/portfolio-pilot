@@ -27,6 +27,9 @@ export const useLoginCardStyles = createStyleHook((theme) => {
       height: "40px",
       borderRadius: "100%",
     },
+    errorText: {
+      color: theme.palette.error.main,
+    },
     loginText: {
       color: theme.palette.text.primary,
     },

@@ -21,6 +21,9 @@ export const LoginCard = () => {
           {"Sign In"}
         </Typography>
       </Box>
+      {errors.apiError && (
+        <Typography sx={combineStyles(styles.errorText, styles.marginBottom)}>{errors.apiError}</Typography>
+      )}
       <TextField
         sx={combineStyles(styles.input, styles.marginBottom)}
         onChange={(event) => callbacks.handleEmailChange(event.target.value)}
@@ -31,8 +34,8 @@ export const LoginCard = () => {
         label="Email"
         variant="outlined"
         type="email"
-        error={Boolean(errors.error || errors.emailError)}
-        helperText={errors.error || errors.emailError}
+        error={Boolean(errors.emailError)}
+        helperText={errors.emailError}
       />
       <TextField
         sx={combineStyles(styles.input, styles.marginBottom)}
@@ -44,7 +47,7 @@ export const LoginCard = () => {
         type="password"
         fullWidth={true}
         autoComplete="current-password"
-        error={Boolean(errors.error || errors.passwordError)}
+        error={Boolean(errors.passwordError)}
         helperText={errors.passwordError}
       />
       <Button
@@ -54,8 +57,9 @@ export const LoginCard = () => {
         color="primary"
         sx={styles.marginBottom}
         onClick={callbacks.handleSubmit}
+        disabled={details.isLoading}
       >
-        Sign In
+        {details.isLoading ? "Signing In..." : "Sign In"}
       </Button>
       <Link href={AppRoutes.signup} variant="body2">
         {"Don't have an account? Sign Up"}

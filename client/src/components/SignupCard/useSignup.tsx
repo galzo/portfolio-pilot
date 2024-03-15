@@ -2,7 +2,7 @@ import { useCallback, useContext, useState } from "react";
 import { isEmailAddressValid, isNameValid, isPasswordValid } from "../../utils/inputUtils";
 import { SignupResponse, UserApi } from "../../api/user.api";
 import { ApiResponse } from "../../types/api.types";
-import { resolveTokenFromSignupResponse, resolveUserFromSignupResponse } from "../../utils/apiUtils";
+import { resolveTokenFromUserResponse, resolveUserFromUserResponse } from "../../utils/apiUtils";
 import { useNavigate } from "react-router-dom";
 import { AppRoutes } from "../../consts/routes";
 import { useAuth } from "../../hooks/useAuth";
@@ -30,8 +30,8 @@ export const useSignup = () => {
   const handleResponsePayload = useCallback(
     (response: ApiResponse<SignupResponse>) => {
       if (response.isSuccess) {
-        const user = resolveUserFromSignupResponse(response.payload);
-        const token = resolveTokenFromSignupResponse(response.payload);
+        const user = resolveUserFromUserResponse(response.payload);
+        const token = resolveTokenFromUserResponse(response.payload);
         setUser(user);
         setToken(token);
         navigate(AppRoutes.portfolio);

@@ -30,6 +30,14 @@ interface LoginUserRequest {
 	password: string;
 }
 
+interface LoginResponse {
+	id: number;
+	name: string;
+	email: string;
+	isAdmin: boolean;
+	token: string;
+}
+
 export const signup = async (req: Request, res: Response) => {
 	try {
 		const { name, email, password, isAdmin } = req.body as SignupRequest;
@@ -89,10 +97,16 @@ export const login = async (req: Request, res: Response) => {
 			return;
 		}
 
-		const token = generateJwtToken(user);
-		console.log('User login Success');
+		const responsePayload: LoginResponse = {
+			id: user.id,
+			name: user.name,
+			email: user.email,
+			isAdmin: user.isAdmin,
+			token: generateJwtToken(user),
+		};
 
-		okResponse(res, { token });
+		console.log('User login Success');
+		okResponse(res, responsePayload);
 	} catch (e) {
 		console.error('Failed login user', e);
 		internalServerErrorResponse(res);
