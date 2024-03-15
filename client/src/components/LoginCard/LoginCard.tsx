@@ -5,6 +5,7 @@ import { useLoginCardStyles } from "./LoginCard.styles";
 import { useCallback, useState } from "react";
 import { isEmailAddressValid, isPasswordValid } from "../../utils/inputUtils";
 import { useLogin } from "./useLogin";
+import { AppRoutes } from "../../consts/routes";
 
 export const LoginCard = () => {
   const styles = useLoginCardStyles();
@@ -68,7 +69,7 @@ export const LoginCard = () => {
       >
         Sign In
       </Button>
-      <Link href="#" variant="body2">
+      <Link href={AppRoutes.signup} variant="body2">
         {"Don't have an account? Sign Up"}
       </Link>
     </Box>

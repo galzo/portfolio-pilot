@@ -17,6 +17,7 @@ const useAppTitleStyles = createStyleHook((theme) => {
     textContainer: {
       display: "flex",
       flexDirection: "row",
+      userSelect: "none",
     },
   };
 });
