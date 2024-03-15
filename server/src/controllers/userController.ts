@@ -116,7 +116,6 @@ export const signup = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
 	try {
 		const userModel = new UserModel(req.db);
-
 		const { email, password } = req.body as LoginUserRequest;
 		console.log(`Trying to login user: ${email}`);
 

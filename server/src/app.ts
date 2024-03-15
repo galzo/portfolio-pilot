@@ -6,6 +6,7 @@ import { setupDatabase } from './database/database';
 import { databaseMiddleware } from './middleware/databaseMiddleware';
 import { userRouter } from './routes/userRouter';
 import { loadEnvironmentVars } from './utils/envUtils';
+import { portfolioRouter } from './routes/portfolioRouter';
 
 const setupEnvironment = () => {
 	const environment = process.env.NODE_ENV || 'development';
@@ -23,6 +24,7 @@ const setupServer = (db: DataSource) => {
 
 	// Setup routers
 	app.use('/api/user', userRouter);
+	app.use('/api/portfolio', portfolioRouter);
 	return app;
 };
 

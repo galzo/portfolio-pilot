@@ -8,6 +8,13 @@ export class PortfolioModel extends BaseModel {
 		return this.portfolioRepo.save(portfolio);
 	};
 
+	getPortfolioByUserId = async (userId: number) =>
+		this.portfolioRepo
+			.createQueryBuilder('portfolio')
+			.leftJoinAndSelect('portfolio.user', 'user')
+			.where('user.id = :userId', { userId })
+			.getOne();
+
 	private get portfolioRepo() {
 		return this.db.getRepository(Portfolio);
 	}
