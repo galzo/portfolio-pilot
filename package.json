@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "An internal project used for study purposes of different API exploits, this site is a mock portfolio management app that provides several known exploits in it's backend API design",
   "scripts": {
+    "clean:db": "cd server && npm run clean-db",
     "start:server:dev": "cd server && npm run start:dev",
     "start:server:prod": "cd server && npm run start:prod",
     "start:client:dev": "cd client && npm run start:dev",

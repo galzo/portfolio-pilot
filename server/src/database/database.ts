@@ -1,3 +1,4 @@
+import { hashPassword } from './../utils/passwordUtils';
 import { DataSource } from 'typeorm';
 import fs from 'fs';
 import { AdminUserDbData, StocksDbData } from '../common/constants';
@@ -29,10 +30,11 @@ const populateDatabase = async (db: DataSource) => {
 	console.log('Running initial db data population...');
 
 	const userModel = new UserModel(db);
+	const hashedPassword = await hashPassword(AdminUserDbData.password);
 	userModel.insertUser(
 		AdminUserDbData.name,
 		AdminUserDbData.email,
-		AdminUserDbData.password,
+		hashedPassword,
 		AdminUserDbData.isAdmin
 	);
 
