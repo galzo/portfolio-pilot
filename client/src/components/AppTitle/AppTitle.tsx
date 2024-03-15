@@ -11,6 +11,7 @@ const useAppTitleStyles = createStyleHook((theme) => {
       flexDirection: "column",
       color: theme.palette.text.primary,
       fontFamily: "roboto",
+      marginBottom: "50px",
     },
     textContainer: {
       display: "flex",
