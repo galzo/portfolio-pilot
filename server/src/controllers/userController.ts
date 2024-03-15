@@ -9,6 +9,8 @@ import {
 } from '../utils/responseUtils';
 import { isUserPasswordMatching } from '../utils/userUtils';
 import { generateJwtToken } from '../utils/authUtils';
+import { PortfolioModel } from '../models/portfolioModel';
+import { generateRandomNumber } from '../utils/portfolioUtils';
 
 interface SignupRequest {
 	name: string;
@@ -44,8 +46,9 @@ export const signup = async (req: Request, res: Response) => {
 
 		console.log(`Trying to signup user: ${email}`);
 		const userModel = new UserModel(req.db);
-		const hashedPassword = await hashPassword(password);
+		const portfolioModel = new PortfolioModel(req.db);
 
+		const hashedPassword = await hashPassword(password);
 		const userExists = await userModel.getUserByEmail(email);
 		if (userExists) {
 			conflictResponse(
@@ -60,6 +63,12 @@ export const signup = async (req: Request, res: Response) => {
 			email,
 			hashedPassword,
 			isAdmin
+		);
+
+		await portfolioModel.insertPortfolio(
+			`${name}'s Portfolio`,
+			generateRandomNumber(1000, 10000),
+			user
 		);
 
 		const responsePayload: SignupResponse = {
