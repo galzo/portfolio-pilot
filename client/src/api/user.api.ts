@@ -1,43 +1,43 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 import { ApiRoutes } from "../consts/api";
 import { AuthService } from "../services/authService";
+import { ApiResponse } from "../types/api.types";
 
-interface SignupRequest {
+export interface SignupRequest {
   name: string;
   email: string;
   password: string;
   isAdmin: boolean;
 }
 
-interface SignupResponse {
+export interface SignupResponse {
+  id: number;
+  name: string;
+  email: string;
+  isAdmin: boolean;
   token: string;
 }
 
-interface LoginRequest {
+export interface LoginRequest {
   email: string;
   password: string;
 }
 
-interface LoginResponse {
+export interface LoginResponse {
   token: string;
 }
 
-const signup = async (payload: SignupRequest) => {
+const signup = async (payload: SignupRequest): Promise<ApiResponse<SignupResponse>> => {
   try {
     console.log("Signing up user...", payload);
-
-    const authService = new AuthService();
-    authService.clearAuthToken();
-
     const response = await axios.post<SignupResponse>(ApiRoutes.user.signup, payload);
-    const { token } = response.data;
-    authService.storeAuthToken(token);
 
-    console.log("Sign up complete", token);
-    return true;
-  } catch (e) {
+    console.log("Signup complete");
+    return { isSuccess: true, payload: response.data };
+  } catch (e: any) {
     console.error("Error signing up", e);
-    return false;
+    return { isSuccess: false, error: e.message };
   }
 };
 
@@ -45,12 +45,8 @@ const login = async (payload: LoginRequest) => {
   try {
     console.log("Logging in user...", payload);
 
-    const authService = new AuthService();
-    authService.clearAuthToken();
-
     const response = await axios.post<LoginResponse>(ApiRoutes.user.login, payload);
     const { token } = response.data;
-    authService.storeAuthToken(token);
 
     console.log("Login complete", token);
     return true;

@@ -16,6 +16,14 @@ interface SignupRequest {
 	isAdmin: boolean;
 }
 
+interface SignupResponse {
+	id: number;
+	name: string;
+	email: string;
+	isAdmin: boolean;
+	token: string;
+}
+
 interface LoginUserRequest {
 	email: string;
 	password: string;
@@ -35,10 +43,16 @@ export const signup = async (req: Request, res: Response) => {
 			isAdmin
 		);
 
-		const token = generateJwtToken(user);
-		console.log('User signup success');
+		const responsePayload: SignupResponse = {
+			id: user.id,
+			name: user.name,
+			email: user.email,
+			isAdmin: user.isAdmin,
+			token: generateJwtToken(user),
+		};
 
-		okResponse(res, { token });
+		console.log('User signup success');
+		okResponse(res, { responsePayload });
 	} catch (e) {
 		console.error('Failed creating user', e);
 		internalServerErrorResponse(res);

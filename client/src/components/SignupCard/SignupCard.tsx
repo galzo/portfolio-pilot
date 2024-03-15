@@ -66,8 +66,9 @@ export const SignupCard = () => {
         color="primary"
         sx={styles.marginBottom}
         onClick={callbacks.handleSubmit}
+        disabled={details.isLoading}
       >
-        Sign Up
+        {details.isLoading ? "Signing Up..." : "Sign Up"}
       </Button>
       <Link href={AppRoutes.login} variant="body2">
         {"Already have an account? Sign In"}
