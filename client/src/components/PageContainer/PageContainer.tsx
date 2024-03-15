@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { FC, ReactNode } from "react";
-import { createStyleHook } from "../../../hooks/styleHooks";
+import { createStyleHook } from "../../hooks/styleHooks";
 
 interface PageContainerProps {
   children: ReactNode;
