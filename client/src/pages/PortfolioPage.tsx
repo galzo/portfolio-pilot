@@ -1,6 +1,6 @@
 import { PageContainer } from "../components/PageContainer/PageContainer";
 import { createStyleHook } from "../hooks/styleHooks";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useMemo } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useRedirect } from "../hooks/useRedirect";
@@ -11,6 +11,7 @@ import { Player } from "@lottiefiles/react-lottie-player";
 import coinsAnimation from "..//assets/animations/coinsAnimation.json";
 import { useWindowSize } from "../hooks/useWindowSize";
 import { PortfolioPositions } from "../components/PortfolioCard/PortfolioPositions";
+import { SignOutButton } from "../components/SignOutButton/SignOutButton";
 
 const usePortfolioPageStyles = createStyleHook((theme) => {
   return {
@@ -28,7 +29,6 @@ const usePortfolioPageStyles = createStyleHook((theme) => {
 export const PortfolioPage = () => {
   const styles = usePortfolioPageStyles();
   const { isLoggedIn, isAdmin, getUser } = useAuth();
-  const windowSize = useWindowSize();
   useRedirect({ predicate: () => !isLoggedIn(), redirectTo: AppRoutes.login });
   useRedirect({ predicate: () => isAdmin(), redirectTo: AppRoutes.admin });
 
@@ -36,7 +36,7 @@ export const PortfolioPage = () => {
     return getUser();
   }, [getUser]);
 
-  const { isLoading, portfolio, portfolioError } = useFetchPortfolio(user);
+  const { portfolio } = useFetchPortfolio(user);
 
   // Block user from seeting this page if they're not logged in or they're admin
   if (isAdmin() || !portfolio || !user) {
@@ -45,6 +45,7 @@ export const PortfolioPage = () => {
 
   return (
     <PageContainer>
+      <SignOutButton />
       <Box sx={styles.root}>
         <Player
           autoplay={true}
