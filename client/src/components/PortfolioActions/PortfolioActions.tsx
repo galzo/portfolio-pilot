@@ -31,6 +31,7 @@ export const PortfolioActions: FC<PortfolioActionsProps> = ({ user, portfolio, r
             onComplete={() => {
               refreshPortfolioData();
               onSelectAction("none");
+              handleOpenAlert("Succesfully Purchased Stocks");
             }}
           />
         );
@@ -45,6 +46,7 @@ export const PortfolioActions: FC<PortfolioActionsProps> = ({ user, portfolio, r
             onComplete={() => {
               refreshPortfolioData();
               onSelectAction("none");
+              handleOpenAlert("Succesfully Sold Stocks");
             }}
           />
         );
