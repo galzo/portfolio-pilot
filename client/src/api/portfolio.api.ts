@@ -52,10 +52,10 @@ const buyPosition = async (payload: BuyPositionRequest): Promise<ApiResponse<Buy
   }
 };
 
-const sellPosition = async (payload: BuyPositionRequest): Promise<ApiResponse<SellPositionResponse>> => {
+const sellPosition = async (payload: SellPositionRequest): Promise<ApiResponse<SellPositionResponse>> => {
   try {
     console.log(`Selling position for userId ${payload.userId}`);
-    const response = await axios.post<SellPositionResponse>(`${ApiRoutes.portfolio.buy}`, payload);
+    const response = await axios.post<SellPositionResponse>(`${ApiRoutes.portfolio.sell}`, payload);
     console.log("sold position");
 
     return { isSuccess: true, payload: response.data };
