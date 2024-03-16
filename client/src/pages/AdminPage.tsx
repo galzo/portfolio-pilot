@@ -11,6 +11,7 @@ import { UserPicker } from "../components/UserPicker/UserPicker";
 import { combineStyles } from "../utils/styleUtils";
 import { SignOutButton } from "../components/SignOutButton/SignOutButton";
 import { PortfolioApi } from "../api/portfolio.api";
+import { UserFundsManager } from "../components/UserFundsManager/UserFundsManager";
 
 const useAdminPageStyles = createStyleHook((theme) => {
   return {
@@ -43,30 +44,11 @@ export const AdminPage = () => {
 
   useRedirect({ predicate: () => !isAdmin(), redirectTo: AppRoutes.root });
   const { users } = useFetchUsers();
-  const { selectedUser, selectedUserEmail, onSelectUserEmail, resetSelection } = useUserSelection({ allUsers: users });
-  const [amount, setAmount] = useState<number>();
   const [showFundsSelection, setShowFundsSelection] = useState(false);
 
   const handleComplete = useCallback(() => {
-    resetSelection();
     setShowFundsSelection(false);
-  }, [resetSelection]);
-
-  const addFundsToPortfolio = useCallback(async () => {
-    if (!selectedUser || !amount) return;
-
-    const portfolioResponse = await PortfolioApi.getPortfolio(selectedUser.id);
-    if (!portfolioResponse.isSuccess) return;
-
-    const response = await PortfolioApi.addFunds({ portfolioId: portfolioResponse.payload.id, cash: amount });
-    if (response.isSuccess) {
-      alert("funds were successfully added to portfolio");
-      handleComplete();
-    } else {
-      alert(response.error);
-      handleComplete();
-    }
-  }, [amount, handleComplete, selectedUser]);
+  }, []);
 
   if (!isAdmin()) {
     return null;
@@ -82,31 +64,7 @@ export const AdminPage = () => {
         <Typography sx={combineStyles(styles.title, styles.marginBottom)} variant="h4">
           {"System Users"}
         </Typography>
-        {showFundsSelection && (
-          <Box sx={styles.row}>
-            <UserPicker users={users} selectedUserEmail={selectedUserEmail} onSelectUserEmail={onSelectUserEmail} />
-            <TextField
-              disabled={!selectedUser}
-              label={selectedUser ? "Funds to add to portfolio" : ""}
-              sx={{ marginRight: "16px", width: "250px" }}
-              variant="outlined"
-              value={amount}
-              required={true}
-              type="number"
-              onChange={(event) => setAmount(Number(event.target.value))}
-              ref={(ref) => ref}
-            />
-            <Button
-              color="primary"
-              variant="contained"
-              size="large"
-              disabled={!selectedUser || !amount}
-              onClick={addFundsToPortfolio}
-            >
-              {"Add Funds"}
-            </Button>
-          </Box>
-        )}
+        {showFundsSelection && <UserFundsManager users={users} onComplete={handleComplete} />}
         {!showFundsSelection && (
           <Button color="secondary" variant="contained" size="large" onClick={() => setShowFundsSelection(true)}>
             {"Add Funds To User Portfolios"}
