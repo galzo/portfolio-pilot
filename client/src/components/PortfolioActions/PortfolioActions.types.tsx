@@ -6,6 +6,7 @@ import { User } from "../../types/user.types";
 export interface PortfolioActionsProps {
   user: User;
   portfolio: Portfolio;
+  refreshPortfolioData: VoidFunction;
 }
 
 export interface PortfolioActionsPanelProps {
@@ -24,6 +25,7 @@ export interface BuyPositionProps {
   portfolio: Portfolio;
   triggerAlert: (message: string) => void;
   onCancel: () => void;
+  onComplete: () => void;
 }
 
 export type PortfolioActionType = "buy" | "sell" | "none";

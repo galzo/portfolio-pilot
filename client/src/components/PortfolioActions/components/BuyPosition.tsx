@@ -1,8 +1,5 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { Portfolio } from "../../../types/portfolio.types";
-import { Stock } from "../../../types/stock.types";
-import { User } from "../../../types/user.types";
-import { FC } from "react";
+import { FC, useCallback } from "react";
 import { useStockSelection } from "../hooks/useStockSelection";
 import { usePortfolioActionsStyles } from "../PortfolioActions.styles";
 import { StockPicker } from "./StockPicker";
@@ -10,8 +7,9 @@ import { useBuyPositionAmount } from "../hooks/useBuyPositionAmount";
 import { BuyPositionProps } from "../PortfolioActions.types";
 import { combineStyles } from "../../../utils/styleUtils";
 import { formatUsdCurrency } from "../../../utils/textFormatUtils";
+import { PortfolioApi } from "../../../api/portfolio.api";
 
-export const BuyPosition: FC<BuyPositionProps> = ({ stocks, portfolio, triggerAlert, onCancel }) => {
+export const BuyPosition: FC<BuyPositionProps> = ({ user, stocks, portfolio, triggerAlert, onCancel, onComplete }) => {
   const styles = usePortfolioActionsStyles();
 
   const { selectedTicker, onSelectTicker, selectedStock } = useStockSelection({ allStocks: stocks });
@@ -20,6 +18,13 @@ export const BuyPosition: FC<BuyPositionProps> = ({ stocks, portfolio, triggerAl
     portfolio: portfolio,
     onError: () => triggerAlert("Not enough cash to buy more stocks"),
   });
+
+  const buyPosition = useCallback(async () => {
+    if (selectedStock && amount) {
+      await PortfolioApi.buyPosition({ userId: user.id, stockId: selectedStock.id, amount });
+      onComplete();
+    }
+  }, [amount, onComplete, selectedStock, user.id]);
 
   return (
     <Box sx={styles.column}>
@@ -41,6 +46,7 @@ export const BuyPosition: FC<BuyPositionProps> = ({ stocks, portfolio, triggerAl
           size="large"
           disabled={!selectedStock || !amount}
           sx={styles.smallMarginRight}
+          onClick={buyPosition}
         >
           {"Buy"}
         </Button>

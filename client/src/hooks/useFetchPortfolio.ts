@@ -22,6 +22,12 @@ export const useFetchPortfolio = (user: Optional<User>) => {
     setIsLoading(false);
   }, []);
 
+  const refreshPortfolio = useCallback(async () => {
+    if (user) {
+      fetchPortfolio(user.id);
+    }
+  }, [fetchPortfolio, user]);
+
   useEffect(() => {
     const shouldTrigger = user && !isLoading && !portfolio && !portfolioError;
     if (shouldTrigger) {
@@ -33,5 +39,6 @@ export const useFetchPortfolio = (user: Optional<User>) => {
     isLoading,
     portfolio,
     portfolioError,
+    refreshPortfolio,
   };
 };

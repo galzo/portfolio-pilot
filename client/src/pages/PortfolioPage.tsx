@@ -37,7 +37,7 @@ export const PortfolioPage = () => {
     return getUser();
   }, [getUser]);
 
-  const { portfolio } = useFetchPortfolio(user);
+  const { portfolio, refreshPortfolio } = useFetchPortfolio(user);
 
   // Block user from seeting this page if they're not logged in or they're admin
   if (isAdmin() || !portfolio || !user) {
@@ -58,7 +58,7 @@ export const PortfolioPage = () => {
         />
         <PortfolioCard portfolio={portfolio} user={user} />
         <PortfolioPositions positions={portfolio.positions} />
-        <PortfolioActions portfolio={portfolio} user={user} />
+        <PortfolioActions portfolio={portfolio} user={user} refreshPortfolioData={refreshPortfolio} />
       </Box>
     </PageContainer>
   );

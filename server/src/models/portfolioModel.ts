@@ -8,6 +8,10 @@ export class PortfolioModel extends BaseModel {
 		return this.portfolioRepo.save(portfolio);
 	};
 
+	updatePortfolio = async (id: number, cash: number) => {
+		await this.portfolioRepo.update(id, { cash });
+	};
+
 	getPortfolioByUserId = async (userId: number) =>
 		this.portfolioRepo
 			.createQueryBuilder('portfolio')

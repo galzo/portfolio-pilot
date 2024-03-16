@@ -13,6 +13,9 @@ export class StockModel extends BaseModel {
 
 	getAllStocks = async (): Promise<Stock[]> => this.stockRepo.find();
 
+	getStockById = async (id: number) =>
+		this.stockRepo.findOne({ where: { id } });
+
 	private get stockRepo() {
 		return this.db.getRepository(Stock);
 	}

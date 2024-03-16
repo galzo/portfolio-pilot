@@ -18,6 +18,10 @@ export class PortfolioStockModel extends BaseModel {
 		return this.portfolioStockRepo.save(portfolioStock);
 	};
 
+	updatePortfolioStock = async (id: number, amount: number) => {
+		await this.portfolioStockRepo.update(id, { amount });
+	};
+
 	private get portfolioStockRepo() {
 		return this.db.getRepository(PortfolioStock);
 	}
