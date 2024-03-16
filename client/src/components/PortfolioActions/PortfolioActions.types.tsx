@@ -19,7 +19,7 @@ export interface StockPickerProps {
   onSelectStock: (event: SelectChangeEvent<string>) => void;
 }
 
-export interface BuyPositionProps {
+export interface PositionActionProps {
   stocks: Stock[];
   user: User;
   portfolio: Portfolio;

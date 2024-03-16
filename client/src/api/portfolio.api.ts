@@ -11,7 +11,18 @@ export interface BuyPositionRequest {
   stockId: number;
   amount: number;
 }
+
+export interface SellPositionRequest {
+  userId: number;
+  stockId: number;
+  amount: number;
+}
+
 export interface BuyPositionResponse {
+  isSuccess: boolean;
+}
+
+export interface SellPositionResponse {
   isSuccess: boolean;
 }
 
@@ -41,7 +52,21 @@ const buyPosition = async (payload: BuyPositionRequest): Promise<ApiResponse<Buy
   }
 };
 
+const sellPosition = async (payload: BuyPositionRequest): Promise<ApiResponse<SellPositionResponse>> => {
+  try {
+    console.log(`Selling position for userId ${payload.userId}`);
+    const response = await axios.post<SellPositionResponse>(`${ApiRoutes.portfolio.buy}`, payload);
+    console.log("sold position");
+
+    return { isSuccess: true, payload: response.data };
+  } catch (e: unknown) {
+    console.error("Error selling position", e);
+    return { isSuccess: false, error: resolveApiErrorMessage(e) };
+  }
+};
+
 export const PortfolioApi = {
   getPortfolio,
   buyPosition,
+  sellPosition,
 };

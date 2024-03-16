@@ -8,6 +8,7 @@ import { PositionActionProps } from "../PortfolioActions.types";
 import { combineStyles } from "../../../utils/styleUtils";
 import { formatUsdCurrency } from "../../../utils/textFormatUtils";
 import { PortfolioApi } from "../../../api/portfolio.api";
+import { useSellPositionAmount } from "../hooks/useSellPositionAmount";
 
 export const BuyPosition: FC<PositionActionProps> = ({
   user,
@@ -20,15 +21,15 @@ export const BuyPosition: FC<PositionActionProps> = ({
   const styles = usePortfolioActionsStyles();
 
   const { selectedTicker, onSelectTicker, selectedStock } = useStockSelection({ allStocks: stocks });
-  const { onSelectAmount, amount, totalValue } = useBuyPositionAmount({
+  const { onSelectAmount, amount, totalValue } = useSellPositionAmount({
     selectedStock: selectedStock,
     portfolio: portfolio,
     onError: () => triggerAlert("Not enough cash to buy more stocks"),
   });
 
-  const buyPosition = useCallback(async () => {
+  const sellPosition = useCallback(async () => {
     if (selectedStock && amount) {
-      const response = await PortfolioApi.buyPosition({ userId: user.id, stockId: selectedStock.id, amount });
+      const response = await PortfolioApi.sellPosition({ userId: user.id, stockId: selectedStock.id, amount });
       if (response.isSuccess) {
         onComplete();
       } else {
@@ -58,7 +59,7 @@ export const BuyPosition: FC<PositionActionProps> = ({
           size="large"
           disabled={!selectedStock || !amount}
           sx={styles.smallMarginRight}
-          onClick={buyPosition}
+          onClick={sellPosition}
         >
           {"Buy"}
         </Button>
