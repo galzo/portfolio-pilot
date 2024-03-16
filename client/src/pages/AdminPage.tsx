@@ -45,9 +45,11 @@ export const AdminPage = () => {
   const { users } = useFetchUsers();
   const { selectedUser, selectedUserEmail, onSelectUserEmail, resetSelection } = useUserSelection({ allUsers: users });
   const [amount, setAmount] = useState<number>();
+  const [showFundsSelection, setShowFundsSelection] = useState(false);
 
   const handleComplete = useCallback(() => {
     resetSelection();
+    setShowFundsSelection(false);
   }, [resetSelection]);
 
   const addFundsToPortfolio = useCallback(async () => {
@@ -80,29 +82,36 @@ export const AdminPage = () => {
         <Typography sx={combineStyles(styles.title, styles.marginBottom)} variant="h4">
           {"System Users"}
         </Typography>
-        <Box sx={styles.row}>
-          <UserPicker users={users} selectedUserEmail={selectedUserEmail} onSelectUserEmail={onSelectUserEmail} />
-          <TextField
-            disabled={!selectedUser}
-            label={selectedUser ? "Funds to add to portfolio" : ""}
-            sx={{ marginRight: "16px", width: "250px" }}
-            variant="outlined"
-            value={amount}
-            required={true}
-            type="number"
-            onChange={(event) => setAmount(Number(event.target.value))}
-            ref={(ref) => ref}
-          />
-          <Button
-            color="primary"
-            variant="contained"
-            size="large"
-            disabled={!selectedUser || !amount}
-            onClick={addFundsToPortfolio}
-          >
-            {"Add Funds"}
+        {showFundsSelection && (
+          <Box sx={styles.row}>
+            <UserPicker users={users} selectedUserEmail={selectedUserEmail} onSelectUserEmail={onSelectUserEmail} />
+            <TextField
+              disabled={!selectedUser}
+              label={selectedUser ? "Funds to add to portfolio" : ""}
+              sx={{ marginRight: "16px", width: "250px" }}
+              variant="outlined"
+              value={amount}
+              required={true}
+              type="number"
+              onChange={(event) => setAmount(Number(event.target.value))}
+              ref={(ref) => ref}
+            />
+            <Button
+              color="primary"
+              variant="contained"
+              size="large"
+              disabled={!selectedUser || !amount}
+              onClick={addFundsToPortfolio}
+            >
+              {"Add Funds"}
+            </Button>
+          </Box>
+        )}
+        {!showFundsSelection && (
+          <Button color="secondary" variant="contained" size="large" onClick={() => setShowFundsSelection(true)}>
+            {"Add Funds To User Portfolios"}
           </Button>
-        </Box>
+        )}
       </Box>
     </PageContainer>
   );
