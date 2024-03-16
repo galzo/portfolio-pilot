@@ -10,6 +10,7 @@ import { PortfolioCard } from "../components/PortfolioCard/PortfolioCard";
 import { Player } from "@lottiefiles/react-lottie-player";
 import coinsAnimation from "..//assets/animations/coinsAnimation.json";
 import { useWindowSize } from "../hooks/useWindowSize";
+import { PortfolioPositions } from "../components/PortfolioCard/PortfolioPositions";
 
 const usePortfolioPageStyles = createStyleHook((theme) => {
   return {
@@ -54,6 +55,7 @@ export const PortfolioPage = () => {
           }}
         />
         <PortfolioCard portfolio={portfolio} user={user} />
+        <PortfolioPositions positions={portfolio.positions} />
       </Box>
     </PageContainer>
   );
