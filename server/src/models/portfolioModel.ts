@@ -12,6 +12,8 @@ export class PortfolioModel extends BaseModel {
 		this.portfolioRepo
 			.createQueryBuilder('portfolio')
 			.leftJoinAndSelect('portfolio.user', 'user')
+			.leftJoinAndSelect('portfolio.portfolioStocks', 'portfolioStocks')
+			.leftJoinAndSelect('portfolioStocks.stock', 'stock')
 			.where('user.id = :userId', { userId })
 			.getOne();
 
