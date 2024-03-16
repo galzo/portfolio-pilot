@@ -6,46 +6,38 @@ import { PortfolioActionType, PortfolioActionsProps } from "./PortfolioActions.t
 import { PortfolioActionsPanel } from "./components/PortfolioActionsPanel";
 import { BuyPosition } from "./components/BuyPosition";
 import { PortfolioActionsAlert } from "./components/PortfolioActionAlert";
+import { useAlert } from "./hooks/useAlert";
+import { useSelectedAction } from "./hooks/useSelectedAction";
 
 export const PortfolioActions: FC<PortfolioActionsProps> = ({ user, portfolio }) => {
   const styles = usePortfolioActionsStyles();
   const { stocks } = useFetchStocks();
-
-  const [isAlertOpen, setAlertOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const handleTriggerAlert = useCallback((message: string) => {
-    setAlertOpen(true);
-    setAlertMessage(message);
-  }, []);
-
-  const [selectedAction, setSelectedAction] = useState<PortfolioActionType>("none");
-  const handleActionSelect = useCallback((actionType: PortfolioActionType) => {
-    setSelectedAction(actionType);
-  }, []);
+  const { selectedAction, onSelectAction } = useSelectedAction();
+  const { isAlertOpen, alertMessage, handleOpenAlert, handleCloseAlert } = useAlert();
 
   const renderActionsPanel = useCallback(() => {
     switch (selectedAction) {
       case "none":
-        return <PortfolioActionsPanel onActionSelect={handleActionSelect} />;
+        return <PortfolioActionsPanel onActionSelect={onSelectAction} />;
       case "buy":
         return (
           <BuyPosition
             stocks={stocks}
             user={user}
             portfolio={portfolio}
-            triggerAlert={handleTriggerAlert}
-            onCancel={() => handleActionSelect("none")}
+            triggerAlert={handleOpenAlert}
+            onCancel={() => onSelectAction("none")}
           />
         );
       case "sell":
         return null;
     }
-  }, [handleActionSelect, handleTriggerAlert, portfolio, selectedAction, stocks, user]);
+  }, [handleOpenAlert, onSelectAction, portfolio, selectedAction, stocks, user]);
 
   return (
     <Box sx={styles.root}>
       {renderActionsPanel()}
-      <PortfolioActionsAlert isOpen={isAlertOpen} onClose={() => setAlertOpen(false)} message={alertMessage} />
+      <PortfolioActionsAlert isOpen={isAlertOpen} onClose={handleCloseAlert} message={alertMessage} />
     </Box>
   );
 };

@@ -44,7 +44,7 @@ export const BuyPosition: FC<BuyPositionProps> = ({ stocks, portfolio, triggerAl
         >
           {"Buy"}
         </Button>
-        <Button color="error" variant="contained" size="large" disabled={!selectedStock || !amount} onClick={onCancel}>
+        <Button color="error" variant="contained" size="large" onClick={onCancel}>
           {"Cancel"}
         </Button>
       </Box>
