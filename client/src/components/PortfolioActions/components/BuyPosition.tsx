@@ -21,10 +21,15 @@ export const BuyPosition: FC<BuyPositionProps> = ({ user, stocks, portfolio, tri
 
   const buyPosition = useCallback(async () => {
     if (selectedStock && amount) {
-      await PortfolioApi.buyPosition({ userId: user.id, stockId: selectedStock.id, amount });
-      onComplete();
+      const response = await PortfolioApi.buyPosition({ userId: user.id, stockId: selectedStock.id, amount });
+      if (response.isSuccess) {
+        onComplete();
+      } else {
+        triggerAlert(response.error);
+        onCancel();
+      }
     }
-  }, [amount, onComplete, selectedStock, user.id]);
+  }, [amount, onCancel, onComplete, selectedStock, triggerAlert, user.id]);
 
   return (
     <Box sx={styles.column}>

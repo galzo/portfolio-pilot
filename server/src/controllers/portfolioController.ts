@@ -42,6 +42,11 @@ export const buyPosition = async (req: Request, res: Response) => {
 		return;
 	}
 
+	if (amount < 0) {
+		badRequestResponse(res, 'Amount cannot be negative');
+		return;
+	}
+
 	const targetValue = targetStock.price * amount;
 	const cashLeft = targetPortfolio.cash - targetValue;
 	if (targetValue > targetPortfolio.cash) {
@@ -50,7 +55,7 @@ export const buyPosition = async (req: Request, res: Response) => {
 	}
 
 	const targetPosition = targetPortfolio?.portfolioStocks.find(
-		(stock) => stock.id === targetStock.id
+		(stock) => stock.stock.id === targetStock.id
 	);
 
 	if (targetPosition) {
