@@ -23,6 +23,7 @@ export interface BuyPositionProps {
   user: User;
   portfolio: Portfolio;
   triggerAlert: (message: string) => void;
+  onCancel: () => void;
 }
 
 export type PortfolioActionType = "buy" | "sell" | "none";

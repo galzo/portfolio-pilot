@@ -11,7 +11,7 @@ import { BuyPositionProps } from "../PortfolioActions.types";
 import { combineStyles } from "../../../utils/styleUtils";
 import { formatUsdCurrency } from "../../../utils/textFormatUtils";
 
-export const BuyPosition: FC<BuyPositionProps> = ({ stocks, portfolio, triggerAlert }) => {
+export const BuyPosition: FC<BuyPositionProps> = ({ stocks, portfolio, triggerAlert, onCancel }) => {
   const styles = usePortfolioActionsStyles();
 
   const { selectedTicker, onSelectTicker, selectedStock } = useStockSelection({ allStocks: stocks });
@@ -44,7 +44,7 @@ export const BuyPosition: FC<BuyPositionProps> = ({ stocks, portfolio, triggerAl
         >
           {"Buy"}
         </Button>
-        <Button color="error" variant="contained" size="large" disabled={!selectedStock || !amount}>
+        <Button color="error" variant="contained" size="large" disabled={!selectedStock || !amount} onClick={onCancel}>
           {"Cancel"}
         </Button>
       </Box>

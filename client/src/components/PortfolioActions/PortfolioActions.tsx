@@ -28,7 +28,15 @@ export const PortfolioActions: FC<PortfolioActionsProps> = ({ user, portfolio })
       case "none":
         return <PortfolioActionsPanel onActionSelect={handleActionSelect} />;
       case "buy":
-        return <BuyPosition stocks={stocks} user={user} portfolio={portfolio} triggerAlert={handleTriggerAlert} />;
+        return (
+          <BuyPosition
+            stocks={stocks}
+            user={user}
+            portfolio={portfolio}
+            triggerAlert={handleTriggerAlert}
+            onCancel={() => handleActionSelect("none")}
+          />
+        );
       case "sell":
         return null;
     }
