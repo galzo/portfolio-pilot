@@ -12,6 +12,7 @@ import coinsAnimation from "..//assets/animations/coinsAnimation.json";
 import { useWindowSize } from "../hooks/useWindowSize";
 import { PortfolioPositions } from "../components/PortfolioCard/PortfolioPositions";
 import { SignOutButton } from "../components/SignOutButton/SignOutButton";
+import { PortfolioActions } from "../components/PortfolioActions/PortfolioActions";
 
 const usePortfolioPageStyles = createStyleHook((theme) => {
   return {
@@ -57,6 +58,7 @@ export const PortfolioPage = () => {
         />
         <PortfolioCard portfolio={portfolio} user={user} />
         <PortfolioPositions positions={portfolio.positions} />
+        <PortfolioActions portfolio={portfolio} user={user} />
       </Box>
     </PageContainer>
   );

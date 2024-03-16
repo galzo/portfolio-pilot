@@ -13,6 +13,7 @@ const usePortfolioPositionsStyles = createStyleHook(() => {
     root: {
       display: "flex",
       flexDirection: "row",
+      marginBottom: "40px",
     },
     cardContainer: {
       marginRight: "8px",
