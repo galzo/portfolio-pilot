@@ -3,10 +3,11 @@ import { PageContainer } from "../components/PageContainer/PageContainer";
 import { createStyleHook } from "../hooks/styleHooks";
 import { Box, Typography } from "@mui/material";
 import { AppTitle } from "../components/AppTitle/AppTitle";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { useAuth } from "../hooks/useAuth";
 import { useRedirect } from "../hooks/useRedirect";
 import { AppRoutes } from "../consts/routes";
+import { useFetchPortfolio } from "../hooks/useFetchPortfolio";
 
 const usePortfolioPageStyles = createStyleHook((theme) => {
   return {
@@ -23,9 +24,16 @@ const usePortfolioPageStyles = createStyleHook((theme) => {
 
 export const PortfolioPage = () => {
   const styles = usePortfolioPageStyles();
-  const { getUser, getToken, isLoggedIn, isAdmin } = useAuth();
+  const { isLoggedIn, isAdmin, getUser } = useAuth();
   useRedirect({ predicate: () => !isLoggedIn(), redirectTo: AppRoutes.login });
   useRedirect({ predicate: () => isAdmin(), redirectTo: AppRoutes.admin });
+
+  const user = useMemo(() => {
+    return getUser();
+  }, [getUser]);
+
+  const { isLoading, portfolio, portfolioError } = useFetchPortfolio(user);
+  console.log("portfolio is", portfolio);
 
   // Block user from seeting this page if they're not logged in or they're admin
   if (!isLoggedIn() || isAdmin()) {

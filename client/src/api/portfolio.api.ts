@@ -2,22 +2,11 @@ import axios from "axios";
 import { ApiResponse } from "../types/api.types";
 import { resolveApiErrorMessage } from "../utils/apiUtils";
 import { ApiRoutes } from "../consts/api";
+import { Portfolio } from "../types/portfolio.types";
 
-export interface GetPortfolioResponse {
-  id: number;
-  name: string;
-  cash: number;
-  positions: Array<{
-    amount: number;
-    stock: {
-      id: number;
-      name: string;
-      ticker: string;
-    };
-  }>;
-}
+export type GetPortfolioResponse = Portfolio;
 
-const getPortfolio = async (userId: string): Promise<ApiResponse<GetPortfolioResponse>> => {
+const getPortfolio = async (userId: number): Promise<ApiResponse<GetPortfolioResponse>> => {
   try {
     console.log(`Fetching portfolio for userId ${userId}`);
     const response = await axios.get<GetPortfolioResponse>(`${ApiRoutes.portfolio.get}?userId=${userId}`);

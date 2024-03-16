@@ -11,6 +11,7 @@ export const useRedirect = (props: UseRedirectProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("happens?");
     if (props.predicate()) {
       navigate(props.redirectTo);
     }
