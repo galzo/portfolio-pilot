@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { Portfolio } from "../../types/portfolio.types";
 import { User } from "../../types/user.types";
 import { Box, Typography } from "@mui/material";
 import { IconCoins, IconCurrencyDollar, IconMoneybag } from "@tabler/icons-react";
 import { capitalizeFirstLetter, formatUsdCurrency } from "../../utils/textFormatUtils";
 import { usePortfolioCardStyles } from "./PortfolioCard.styles";
+import { calculateTotalPositionValue } from "../../utils/portfolioUtils";
 
 interface PortfolioCardProps {
   user: User;
@@ -13,6 +14,11 @@ interface PortfolioCardProps {
 
 export const PortfolioCard: React.FunctionComponent<PortfolioCardProps> = ({ portfolio }) => {
   const styles = usePortfolioCardStyles();
+  const totalEvaluation = useMemo(() => {
+    return portfolio.positions.reduce((totalVal, position) => {
+      return totalVal + calculateTotalPositionValue(position);
+    }, 0);
+  }, [portfolio.positions]);
 
   return (
     <Box sx={styles.root}>
@@ -39,7 +45,7 @@ export const PortfolioCard: React.FunctionComponent<PortfolioCardProps> = ({ por
         </Box>
         <Typography sx={styles.subtitle} variant="subtitle2">{`Total Position Evaluation:`}</Typography>
         <Typography sx={styles.subtitleMarked} variant="subtitle2">
-          {formatUsdCurrency(1000)}
+          {formatUsdCurrency(totalEvaluation)}
         </Typography>
       </Box>
     </Box>
