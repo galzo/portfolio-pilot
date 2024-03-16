@@ -27,7 +27,7 @@ export const PortfolioPositions: FC<PortfolioPositionsProps> = ({ positions }) =
   return (
     <Box sx={styles.root}>
       {positions.map((position) => (
-        <Box sx={styles.cardContainer}>
+        <Box sx={styles.cardContainer} key={position.stock.id}>
           <PortfolioPositionCard position={position} />
         </Box>
       ))}

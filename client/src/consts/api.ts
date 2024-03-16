@@ -1,5 +1,4 @@
-const apiServerUrl = "http://localhost:3000";
-const prodApiServerUrl = "http://18.144.80.86:3000";
+const apiServerUrl = import.meta.env.VITE_SERVER_API;
 
 export const ApiRoutes = {
   user: {
