@@ -30,14 +30,10 @@ export const useSellPositionAmount = ({ selectedStock, portfolio, onError }: Sel
       }
 
       const totalValue = (selectedStock?.price ?? 0) * newAmount;
-      if (totalValue <= portfolio.cash) {
-        setAmount(newAmount);
-        setTotalValue(totalValue);
-      } else {
-        onError();
-      }
+      setAmount(newAmount);
+      setTotalValue(totalValue);
     },
-    [onError, portfolio.cash, portfolio.positions, selectedStock?.id, selectedStock?.price]
+    [onError, portfolio.positions, selectedStock?.id, selectedStock?.price]
   );
 
   return {

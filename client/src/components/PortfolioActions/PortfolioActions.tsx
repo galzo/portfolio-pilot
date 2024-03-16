@@ -8,6 +8,7 @@ import { BuyPosition } from "./components/BuyPosition";
 import { PortfolioActionsAlert } from "./components/PortfolioActionAlert";
 import { useAlert } from "./hooks/useAlert";
 import { useSelectedAction } from "./hooks/useSelectedAction";
+import { SellPosition } from "./components/SellPosition";
 
 export const PortfolioActions: FC<PortfolioActionsProps> = ({ user, portfolio, refreshPortfolioData }) => {
   const styles = usePortfolioActionsStyles();
@@ -34,7 +35,19 @@ export const PortfolioActions: FC<PortfolioActionsProps> = ({ user, portfolio, r
           />
         );
       case "sell":
-        return null;
+        return (
+          <SellPosition
+            stocks={portfolio.positions.map((position) => position.stock)}
+            user={user}
+            portfolio={portfolio}
+            triggerAlert={handleOpenAlert}
+            onCancel={() => onSelectAction("none")}
+            onComplete={() => {
+              refreshPortfolioData();
+              onSelectAction("none");
+            }}
+          />
+        );
     }
   }, [handleOpenAlert, onSelectAction, portfolio, refreshPortfolioData, selectedAction, stocks, user]);
 

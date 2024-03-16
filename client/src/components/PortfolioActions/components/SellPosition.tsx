@@ -10,7 +10,7 @@ import { formatUsdCurrency } from "../../../utils/textFormatUtils";
 import { PortfolioApi } from "../../../api/portfolio.api";
 import { useSellPositionAmount } from "../hooks/useSellPositionAmount";
 
-export const BuyPosition: FC<PositionActionProps> = ({
+export const SellPosition: FC<PositionActionProps> = ({
   user,
   stocks,
   portfolio,
@@ -24,7 +24,7 @@ export const BuyPosition: FC<PositionActionProps> = ({
   const { onSelectAmount, amount, totalValue } = useSellPositionAmount({
     selectedStock: selectedStock,
     portfolio: portfolio,
-    onError: () => triggerAlert("Not enough cash to buy more stocks"),
+    onError: () => triggerAlert("Not enough stocks to sell"),
   });
 
   const sellPosition = useCallback(async () => {
@@ -61,7 +61,7 @@ export const BuyPosition: FC<PositionActionProps> = ({
           sx={styles.smallMarginRight}
           onClick={sellPosition}
         >
-          {"Buy"}
+          {"Sell"}
         </Button>
         <Button color="error" variant="contained" size="large" onClick={onCancel}>
           {"Cancel"}

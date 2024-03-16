@@ -26,6 +26,12 @@ interface BuyPositionRequest {
 	amount: number;
 }
 
+interface SellPositionRequest {
+	userId: number;
+	stockId: number;
+	amount: number;
+}
+
 export const buyPosition = async (req: Request, res: Response) => {
 	const { userId, stockId, amount } = req.body as BuyPositionRequest;
 	console.log('Trying to buy position');
@@ -72,6 +78,54 @@ export const buyPosition = async (req: Request, res: Response) => {
 	}
 
 	portfolioModel.updatePortfolio(targetPortfolio.id, cashLeft);
+	okResponse(res, { isSuccess: true });
+};
+
+export const sellPosition = async (req: Request, res: Response) => {
+	const { userId, stockId, amount } = req.body as SellPositionRequest;
+	console.log('Trying to sell position');
+
+	const stockModel = new StockModel(req.db);
+	const portfolioModel = new PortfolioModel(req.db);
+	const portfolioStockModel = new PortfolioStockModel(req.db);
+
+	const targetStock = await stockModel.getStockById(stockId);
+	const targetPortfolio = await portfolioModel.getPortfolioByUserId(userId);
+
+	if (!targetStock || !targetPortfolio) {
+		notFoundResponse(res, 'No portfolio or stock were found for given ids');
+		return;
+	}
+
+	if (amount < 0) {
+		badRequestResponse(res, 'Amount cannot be negative');
+		return;
+	}
+
+	const targetValue = targetStock.price * amount;
+	const cashLeft = targetPortfolio.cash + targetValue;
+
+	const targetPosition = targetPortfolio?.portfolioStocks.find(
+		(stock) => stock.stock.id === targetStock.id
+	);
+
+	if (!targetPosition) {
+		badRequestResponse(res, 'No position to sell :(');
+		return;
+	}
+
+	const shouldDelete = targetPosition.amount - amount === 0;
+	if (shouldDelete) {
+		await portfolioStockModel.deletePortfolioStock(targetPosition.id);
+	} else {
+		await portfolioStockModel.updatePortfolioStock(
+			targetPosition.id,
+			targetPosition.amount - amount
+		);
+	}
+
+	portfolioModel.updatePortfolio(targetPortfolio.id, cashLeft);
+
 	okResponse(res, { isSuccess: true });
 };
 

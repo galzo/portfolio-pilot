@@ -22,6 +22,10 @@ export class PortfolioStockModel extends BaseModel {
 		await this.portfolioStockRepo.update(id, { amount });
 	};
 
+	deletePortfolioStock = async (id: number) => {
+		await this.portfolioStockRepo.delete(id);
+	};
+
 	private get portfolioStockRepo() {
 		return this.db.getRepository(PortfolioStock);
 	}
