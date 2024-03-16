@@ -8,6 +8,7 @@ import { useAuth } from "../hooks/useAuth";
 import { useRedirect } from "../hooks/useRedirect";
 import { AppRoutes } from "../consts/routes";
 import { useFetchPortfolio } from "../hooks/useFetchPortfolio";
+import { PortfolioCard } from "../components/PortfolioCard/PortfolioCard";
 
 const usePortfolioPageStyles = createStyleHook((theme) => {
   return {
@@ -33,17 +34,16 @@ export const PortfolioPage = () => {
   }, [getUser]);
 
   const { isLoading, portfolio, portfolioError } = useFetchPortfolio(user);
-  console.log("portfolio is", portfolio);
 
   // Block user from seeting this page if they're not logged in or they're admin
-  if (!isLoggedIn() || isAdmin()) {
+  if (isAdmin() || !portfolio || !user) {
     return null;
   }
 
   return (
     <PageContainer>
       <Box sx={styles.root}>
-        <Typography color={"black"}>{"Portfolio"}</Typography>
+        <PortfolioCard portfolio={portfolio} user={user} />
       </Box>
     </PageContainer>
   );
