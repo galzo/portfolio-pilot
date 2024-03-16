@@ -14,6 +14,9 @@ const usePortfolioPositionsStyles = createStyleHook(() => {
       display: "flex",
       flexDirection: "row",
     },
+    cardContainer: {
+      marginRight: "8px",
+    },
   };
 });
 
@@ -23,7 +26,9 @@ export const PortfolioPositions: FC<PortfolioPositionsProps> = ({ positions }) =
   return (
     <Box sx={styles.root}>
       {positions.map((position) => (
-        <PortfolioPositionCard position={position} />
+        <Box sx={styles.cardContainer}>
+          <PortfolioPositionCard position={position} />
+        </Box>
       ))}
     </Box>
   );
