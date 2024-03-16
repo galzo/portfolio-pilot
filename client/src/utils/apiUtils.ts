@@ -3,6 +3,7 @@ import { LoginResponse } from "./../api/user.api";
 import { SignupResponse } from "../api/user.api";
 import { User } from "../types/user.types";
 import { AxiosError } from "axios";
+import { AuthService } from "../services/authService";
 
 export const resolveUserFromUserResponse = (response: SignupResponse | LoginResponse) => {
   const user: User = {
@@ -24,4 +25,11 @@ export const resolveApiErrorMessage = (e: unknown): string => {
   }
 
   return (e as any).message;
+};
+
+export const getAuthHeaders = () => {
+  const authService = new AuthService();
+  return {
+    Authorization: `Bearer ${authService.getAuthToken()}`,
+  };
 };

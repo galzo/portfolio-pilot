@@ -8,6 +8,7 @@ import { userRouter } from './routes/userRouter';
 import { loadEnvironmentVars } from './utils/envUtils';
 import { portfolioRouter } from './routes/portfolioRouter';
 import { stockRouter } from './routes/stockRouter';
+import { authenticate } from './middleware/authMiddleware';
 
 const setupEnvironment = () => {
 	const environment = process.env.NODE_ENV || 'development';
@@ -25,8 +26,8 @@ const setupServer = (db: DataSource) => {
 
 	// Setup routers
 	app.use('/api/user', userRouter);
-	app.use('/api/portfolio', portfolioRouter);
-	app.use('/api/stock', stockRouter);
+	app.use('/api/portfolio', authenticate, portfolioRouter);
+	app.use('/api/stock', authenticate, stockRouter);
 	return app;
 };
 

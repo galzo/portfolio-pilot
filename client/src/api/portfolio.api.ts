@@ -1,6 +1,6 @@
 import axios from "axios";
 import { ApiResponse } from "../types/api.types";
-import { resolveApiErrorMessage } from "../utils/apiUtils";
+import { getAuthHeaders, resolveApiErrorMessage } from "../utils/apiUtils";
 import { ApiRoutes } from "../consts/api";
 import { Portfolio } from "../types/portfolio.types";
 
@@ -29,7 +29,9 @@ export interface SellPositionResponse {
 const getPortfolio = async (userId: number): Promise<ApiResponse<GetPortfolioResponse>> => {
   try {
     console.log(`Fetching portfolio for userId ${userId}`);
-    const response = await axios.get<GetPortfolioResponse>(`${ApiRoutes.portfolio.get}?userId=${userId}`);
+    const response = await axios.get<GetPortfolioResponse>(`${ApiRoutes.portfolio.get}?userId=${userId}`, {
+      headers: getAuthHeaders(),
+    });
     console.log("Fetched portfolio.", response.data);
 
     return { isSuccess: true, payload: response.data };
@@ -42,7 +44,9 @@ const getPortfolio = async (userId: number): Promise<ApiResponse<GetPortfolioRes
 const buyPosition = async (payload: BuyPositionRequest): Promise<ApiResponse<BuyPositionResponse>> => {
   try {
     console.log(`Buying position for userId ${payload.userId}`);
-    const response = await axios.post<BuyPositionResponse>(`${ApiRoutes.portfolio.buy}`, payload);
+    const response = await axios.post<BuyPositionResponse>(`${ApiRoutes.portfolio.buy}`, payload, {
+      headers: getAuthHeaders(),
+    });
     console.log("Bought position");
 
     return { isSuccess: true, payload: response.data };
@@ -55,7 +59,9 @@ const buyPosition = async (payload: BuyPositionRequest): Promise<ApiResponse<Buy
 const sellPosition = async (payload: SellPositionRequest): Promise<ApiResponse<SellPositionResponse>> => {
   try {
     console.log(`Selling position for userId ${payload.userId}`);
-    const response = await axios.post<SellPositionResponse>(`${ApiRoutes.portfolio.sell}`, payload);
+    const response = await axios.post<SellPositionResponse>(`${ApiRoutes.portfolio.sell}`, payload, {
+      headers: getAuthHeaders(),
+    });
     console.log("sold position");
 
     return { isSuccess: true, payload: response.data };

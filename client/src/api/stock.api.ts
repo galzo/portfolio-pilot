@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ApiResponse } from "../types/api.types";
 import { Stock } from "../types/stock.types";
-import { resolveApiErrorMessage } from "../utils/apiUtils";
+import { getAuthHeaders, resolveApiErrorMessage } from "../utils/apiUtils";
 import { ApiRoutes } from "../consts/api";
 
 export interface getAllStocksResponse {
@@ -11,7 +11,7 @@ export interface getAllStocksResponse {
 const getAllStocks = async (): Promise<ApiResponse<getAllStocksResponse>> => {
   try {
     console.log("Fetching all stocks");
-    const response = await axios.get<getAllStocksResponse>(ApiRoutes.stock.getAll);
+    const response = await axios.get<getAllStocksResponse>(ApiRoutes.stock.getAll, { headers: getAuthHeaders() });
     console.log("Fetched all stocks");
 
     return { isSuccess: true, payload: response.data };
