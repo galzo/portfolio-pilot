@@ -19,5 +19,9 @@ export const usePortfolioActionsStyles = createStyleHook(() => {
       marginTop: "4px",
       marginRight: "8px",
     },
+    stockPicker: {
+      width: "200px",
+      marginRight: "16px",
+    },
   };
 });

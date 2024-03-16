@@ -1,15 +1,16 @@
 import React, { FC, useCallback, useMemo, useState } from "react";
-import { User } from "../../../types/user.types";
-import { Portfolio } from "../../../types/portfolio.types";
-import { usePortfolioActionsStyles } from "../PortfolioActions.styles";
+import { User } from "../../types/user.types";
+import { Portfolio } from "../../types/portfolio.types";
+import { usePortfolioActionsStyles } from "./PortfolioActions.styles";
 import { Box, Button, Modal, Typography } from "@mui/material";
 import { IconShoppingCart, IconShoppingCartOff } from "@tabler/icons-react";
-import { combineStyles } from "../../../utils/styleUtils";
-import { useFetchStocks } from "../../../hooks/useFetchStocks";
-import { PortfolioActionType, PortfolioActionsProps } from "../PortfolioActions.types";
-import { PortfolioActionsPanel } from "../PortfolioActionsPanel";
+import { combineStyles } from "../../utils/styleUtils";
+import { useFetchStocks } from "../../hooks/useFetchStocks";
+import { PortfolioActionType, PortfolioActionsProps } from "./PortfolioActions.types";
+import { PortfolioActionsPanel } from "./components/PortfolioActionsPanel";
+import { BuyPosition } from "./components/BuyPosition";
 
-export const PortfolioActions: FC<PortfolioActionsProps> = () => {
+export const PortfolioActions: FC<PortfolioActionsProps> = ({ user, portfolio }) => {
   const styles = usePortfolioActionsStyles();
   const [selectedAction, setSelectedAction] = useState<PortfolioActionType>("none");
   const { isLoading, stocks, stocksError } = useFetchStocks();
@@ -23,7 +24,7 @@ export const PortfolioActions: FC<PortfolioActionsProps> = () => {
       case "none":
         return <PortfolioActionsPanel onActionSelect={handleActionSelect} />;
       case "buy":
-        return null;
+        return <BuyPosition stocks={stocks} user={user} portfolio={portfolio} />;
       case "sell":
         return null;
     }
