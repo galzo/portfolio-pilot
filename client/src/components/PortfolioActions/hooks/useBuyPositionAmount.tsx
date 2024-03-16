@@ -15,6 +15,10 @@ export const useBuyPositionAmount = ({ selectedStock, portfolio, onError }: BuyP
 
   const handleSelectAmount = useCallback(
     (newAmount: number) => {
+      if (newAmount < 0) {
+        return;
+      }
+
       const totalValue = (selectedStock?.price ?? 0) * newAmount;
       if (totalValue <= portfolio.cash) {
         setAmount(newAmount);
