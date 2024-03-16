@@ -4,4 +4,5 @@ export interface Stock {
   id: StockId;
   name: string;
   ticker: string;
+  price: number;
 }

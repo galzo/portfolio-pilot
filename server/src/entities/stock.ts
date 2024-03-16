@@ -13,6 +13,9 @@ export class Stock {
 	@Column('text')
 	ticker: string;
 
+	@Column('decimal')
+	price: number;
+
 	@OneToMany(() => PortfolioStock, (portfolioStock) => portfolioStock.stock)
 	portfolioStocks: PortfolioStock[];
 }

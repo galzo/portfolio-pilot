@@ -53,7 +53,7 @@ const _createPortfolioForNewUser = async (req: Request, user: User) => {
 
 	// Pick positions to open within the new portfolio
 	const allStocks = await stockModel.getAllStocks();
-	const positionsToOpen = pickRandomPositions(1, 100, allStocks);
+	const positionsToOpen = pickRandomPositions(1, 10, allStocks);
 
 	// Open a new portfolio
 	const portfolio = await portfolioModel.insertPortfolio(

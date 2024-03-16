@@ -1,10 +1,11 @@
-import React, { FC } from "react";
+import React, { FC, useMemo } from "react";
 import { Stock } from "../../types/stock.types";
 import { PortfolioPosition } from "../../types/portfolio.types";
 import { usePortfolioPositionCardStyles } from "./PortfolioPositionCard.styles";
 import { Box, Typography } from "@mui/material";
 import { IconCoins, IconMoneybag } from "@tabler/icons-react";
 import { formatUsdCurrency } from "../../utils/textFormatUtils";
+import { calculateTotalPositionValue } from "../../utils/portfolioUtils";
 
 export interface PortfolioPositionCardProps {
   position: PortfolioPosition;
@@ -12,6 +13,9 @@ export interface PortfolioPositionCardProps {
 
 export const PortfolioPositionCard: FC<PortfolioPositionCardProps> = ({ position }) => {
   const styles = usePortfolioPositionCardStyles();
+  const positionValue = useMemo(() => {
+    return calculateTotalPositionValue(position);
+  }, [position]);
 
   return (
     <Box sx={styles.root}>
@@ -23,7 +27,7 @@ export const PortfolioPositionCard: FC<PortfolioPositionCardProps> = ({ position
           {position.stock.name}
         </Typography>
         <Typography sx={styles.money} variant="subtitle2">
-          {formatUsdCurrency(32)}
+          {formatUsdCurrency(position.stock.price)}
         </Typography>
       </Box>
       <Box sx={styles.row}>
@@ -37,7 +41,7 @@ export const PortfolioPositionCard: FC<PortfolioPositionCardProps> = ({ position
           <IconMoneybag />
         </Box>
         <Typography sx={styles.subtitle} variant="body2">
-          {formatUsdCurrency(100)}
+          {formatUsdCurrency(positionValue)}
         </Typography>
       </Box>
     </Box>

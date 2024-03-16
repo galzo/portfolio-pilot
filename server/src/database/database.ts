@@ -40,7 +40,7 @@ const populateDatabase = async (db: DataSource) => {
 
 	const stockModel = new StockModel(db);
 	StocksDbData.forEach(async (stock) => {
-		await stockModel.insertStock(stock.name, stock.ticker);
+		await stockModel.insertStock(stock.name, stock.ticker, stock.price);
 	});
 };
 
