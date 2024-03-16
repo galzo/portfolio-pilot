@@ -5,6 +5,9 @@ import { fileURLToPath } from "url";
 
 export default defineConfig({
   plugins: [react(), typescriptCheckerPlugin({ typescript: true })],
+  server: {
+    host: true,
+  },
   build: {
     outDir: "./build",
   },
