@@ -18,6 +18,8 @@ export class UserModel extends BaseModel {
 
 	getUserById = async (id: number) => this.userRepo.findOne({ where: { id } });
 
+	getAllUsers = async (): Promise<User[]> => this.userRepo.find();
+
 	private get userRepo() {
 		return this.db.getRepository(User);
 	}

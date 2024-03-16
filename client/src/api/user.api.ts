@@ -2,7 +2,8 @@
 import axios from "axios";
 import { ApiRoutes } from "../consts/api";
 import { ApiResponse } from "../types/api.types";
-import { resolveApiErrorMessage } from "../utils/apiUtils";
+import { getAuthHeaders, resolveApiErrorMessage } from "../utils/apiUtils";
+import { User } from "../types/user.types";
 
 export interface SignupRequest {
   name: string;
@@ -32,6 +33,23 @@ export interface LoginResponse {
   token: string;
 }
 
+export interface GetAllUsersResponse {
+  users: User[];
+}
+
+const getAllUsers = async (): Promise<ApiResponse<GetAllUsersResponse>> => {
+  try {
+    console.log("Fetching all users");
+    const response = await axios.get<GetAllUsersResponse>(ApiRoutes.user.getAll, { headers: getAuthHeaders() });
+    console.log("Fetched all users");
+
+    return { isSuccess: true, payload: response.data };
+  } catch (e: unknown) {
+    console.error("Error fetching all users", e);
+    return { isSuccess: false, error: resolveApiErrorMessage(e) };
+  }
+};
+
 const signup = async (payload: SignupRequest): Promise<ApiResponse<SignupResponse>> => {
   try {
     console.log("Signing up user...", payload);
@@ -60,4 +78,5 @@ const login = async (payload: LoginRequest): Promise<ApiResponse<LoginResponse>>
 export const UserApi = {
   signup,
   login,
+  getAllUsers,
 };

@@ -46,6 +46,10 @@ interface LoginResponse {
 	token: string;
 }
 
+interface GetAllUsersResponse {
+	users: User[];
+}
+
 const _createPortfolioForNewUser = async (req: Request, user: User) => {
 	const portfolioModel = new PortfolioModel(req.db);
 	const stockModel = new StockModel(req.db);
@@ -70,6 +74,21 @@ const _createPortfolioForNewUser = async (req: Request, user: User) => {
 			portfolio
 		);
 	});
+};
+
+export const getAllUsers = async (req: Request, res: Response) => {
+	try {
+		console.log(`Fetching all users in the system`);
+		const userModel = new UserModel(req.db);
+		const allUsers = await userModel.getAllUsers();
+		const responsePayload: GetAllUsersResponse = { users: allUsers };
+		console.log('Successfuly fetched all users');
+
+		okResponse(res, responsePayload);
+	} catch (e) {
+		console.error('Failed to fetch all users', e);
+		internalServerErrorResponse(res);
+	}
 };
 
 export const signup = async (req: Request, res: Response) => {
