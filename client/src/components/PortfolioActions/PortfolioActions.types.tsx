@@ -14,7 +14,7 @@ export interface PortfolioActionsPanelProps {
 
 export interface StockPickerProps {
   stocks: Stock[];
-  selectedStock: string;
+  selectedStock: string | undefined;
   onSelectStock: (event: SelectChangeEvent<string>) => void;
 }
 

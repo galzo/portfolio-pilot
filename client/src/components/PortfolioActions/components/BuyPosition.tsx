@@ -5,44 +5,38 @@ import { Stock, StockId } from "../../../types/stock.types";
 import { User } from "../../../types/user.types";
 import { FC, useCallback, useState } from "react";
 import { useStockSelection } from "../hooks/useStockSelection";
-
-const useBuyPositionStyles = createStyleHook(() => {
-  return {
-    root: {
-      display: "flex",
-      flexDirection: "row",
-    },
-    selectContainer: {
-      width: "200px",
-      marginRight: "16px",
-    },
-  };
-});
+import { usePortfolioActionsStyles } from "../PortfolioActions.styles";
+import { StockPicker } from "./StockPicker";
+import { useBuyPositionAmount } from "../hooks/useBuyPositionAmount";
 
 interface BuyPositionProps {
   stocks: Stock[];
   user: User;
   portfolio: Portfolio;
+  triggerAlert: (message: string) => void;
 }
 
-export const BuyPosition: FC<BuyPositionProps> = ({ stocks }) => {
-  const styles = useBuyPositionStyles();
+export const BuyPosition: FC<BuyPositionProps> = ({ stocks, portfolio, triggerAlert }) => {
+  const styles = usePortfolioActionsStyles();
   const { selectedTicker, onSelectTicker, selectedStock } = useStockSelection({ allStocks: stocks });
-  console.log(selectedStock);
+  const { onSelectAmount, amount } = useBuyPositionAmount({
+    selectedStock: selectedStock,
+    portfolio: portfolio,
+    onError: () => triggerAlert("Not enough cash to buy more stocks"),
+  });
 
   return (
     <Box sx={styles.root}>
-      <Box sx={styles.selectContainer}>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">{"Pick A Stock"}</InputLabel>
-          <Select id="select-stock" value={selectedTicker} label="Pick a stock" onChange={onSelectTicker}>
-            {stocks.map((stock) => {
-              return <MenuItem value={stock.ticker}>{stock.ticker}</MenuItem>;
-            })}
-          </Select>
-        </FormControl>
-      </Box>
-      <TextField label="Number Of Shares To Buy" variant="outlined" required={true} type="number" fullWidth={true} />
+      <StockPicker stocks={stocks} selectedStock={selectedTicker} onSelectStock={onSelectTicker} />
+      <TextField
+        label="Number Of Shares To Buy"
+        variant="outlined"
+        value={amount}
+        required={true}
+        type="number"
+        fullWidth={true}
+        onChange={(event) => onSelectAmount(Number(event.target.value))}
+      />
     </Box>
   );
 };
