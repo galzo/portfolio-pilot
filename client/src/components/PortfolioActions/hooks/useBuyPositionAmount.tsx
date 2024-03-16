@@ -11,12 +11,14 @@ interface BuyPositionAmountProps {
 
 export const useBuyPositionAmount = ({ selectedStock, portfolio, onError }: BuyPositionAmountProps) => {
   const [amount, setAmount] = useState<number>();
+  const [totalValue, setTotalValue] = useState<number>();
 
   const handleSelectAmount = useCallback(
     (newAmount: number) => {
       const totalValue = (selectedStock?.price ?? 0) * newAmount;
       if (totalValue <= portfolio.cash) {
         setAmount(newAmount);
+        setTotalValue(totalValue);
       } else {
         onError();
       }
@@ -26,6 +28,7 @@ export const useBuyPositionAmount = ({ selectedStock, portfolio, onError }: BuyP
 
   return {
     amount,
+    totalValue,
     onSelectAmount: handleSelectAmount,
   };
 };

@@ -18,4 +18,11 @@ export interface StockPickerProps {
   onSelectStock: (event: SelectChangeEvent<string>) => void;
 }
 
+export interface BuyPositionProps {
+  stocks: Stock[];
+  user: User;
+  portfolio: Portfolio;
+  triggerAlert: (message: string) => void;
+}
+
 export type PortfolioActionType = "buy" | "sell" | "none";
