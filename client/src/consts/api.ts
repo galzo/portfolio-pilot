@@ -8,4 +8,7 @@ export const ApiRoutes = {
   portfolio: {
     get: `${apiServerUrl}/api/portfolio`,
   },
+  stock: {
+    getAll: `${apiServerUrl}/api/stock/all`,
+  },
 };
