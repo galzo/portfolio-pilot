@@ -5,10 +5,10 @@ import { Stock } from "../../../types/stock.types";
 interface SellPositionAmountProps {
   selectedStock: Stock | undefined;
   portfolio: Portfolio;
-  onError: VoidFunction;
+  triggerAlert: (message: string) => void;
 }
 
-export const useSellPositionAmount = ({ selectedStock, portfolio, onError }: SellPositionAmountProps) => {
+export const useSellPositionAmount = ({ selectedStock, portfolio, triggerAlert }: SellPositionAmountProps) => {
   const [amount, setAmount] = useState<number>();
   const [totalValue, setTotalValue] = useState<number>();
 
@@ -20,12 +20,12 @@ export const useSellPositionAmount = ({ selectedStock, portfolio, onError }: Sel
 
       const positionOnPortfolio = portfolio.positions.find((position) => position.stock.id === selectedStock?.id);
       if (!positionOnPortfolio) {
-        onError();
+        triggerAlert("No position was found on portfolio");
         return;
       }
 
       if (newAmount > positionOnPortfolio?.amount) {
-        onError();
+        triggerAlert("Not enough stocks to sell");
         return;
       }
 
@@ -33,7 +33,7 @@ export const useSellPositionAmount = ({ selectedStock, portfolio, onError }: Sel
       setAmount(newAmount);
       setTotalValue(totalValue);
     },
-    [onError, portfolio.positions, selectedStock?.id, selectedStock?.price]
+    [triggerAlert, portfolio.positions, selectedStock?.id, selectedStock?.price]
   );
 
   return {

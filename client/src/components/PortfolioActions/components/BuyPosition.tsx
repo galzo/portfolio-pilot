@@ -23,7 +23,7 @@ export const BuyPosition: FC<PositionActionProps> = ({
   const { onSelectAmount, amount, totalValue } = useBuyPositionAmount({
     selectedStock: selectedStock,
     portfolio: portfolio,
-    onError: () => triggerAlert("Not enough cash to buy more stocks"),
+    triggerAlert,
   });
 
   const buyPosition = useCallback(async () => {

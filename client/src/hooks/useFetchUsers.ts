@@ -12,7 +12,8 @@ export const useFetchUsers = () => {
 
     const response = await UserApi.getAllUsers();
     if (response.isSuccess) {
-      setUsers(response.payload.users);
+      const nonAdminUsers = response.payload.users.filter((user) => !user.isAdmin);
+      setUsers(nonAdminUsers);
     } else {
       setUsersError(response.error);
     }

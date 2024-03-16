@@ -10,6 +10,7 @@ export const ApiRoutes = {
     get: `${apiServerUrl}/api/portfolio`,
     buy: `${apiServerUrl}/api/portfolio/buy`,
     sell: `${apiServerUrl}/api/portfolio/sell`,
+    addFunds: `${apiServerUrl}/api/portfolio/addFunds`,
   },
   stock: {
     getAll: `${apiServerUrl}/api/stock/all`,

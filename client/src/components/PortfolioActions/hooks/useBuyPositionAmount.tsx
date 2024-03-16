@@ -1,21 +1,21 @@
 import { useCallback, useState } from "react";
 import { Portfolio } from "../../../types/portfolio.types";
 import { Stock } from "../../../types/stock.types";
-import { Optional } from "../../../types/common.types";
 
 interface BuyPositionAmountProps {
   selectedStock: Stock | undefined;
   portfolio: Portfolio;
-  onError: VoidFunction;
+  triggerAlert: (message: string) => void;
 }
 
-export const useBuyPositionAmount = ({ selectedStock, portfolio, onError }: BuyPositionAmountProps) => {
+export const useBuyPositionAmount = ({ selectedStock, portfolio, triggerAlert }: BuyPositionAmountProps) => {
   const [amount, setAmount] = useState<number>();
   const [totalValue, setTotalValue] = useState<number>();
 
   const handleSelectAmount = useCallback(
     (newAmount: number) => {
       if (newAmount < 0) {
+        triggerAlert("Amount cannot be negative");
         return;
       }
 
@@ -24,10 +24,10 @@ export const useBuyPositionAmount = ({ selectedStock, portfolio, onError }: BuyP
         setAmount(newAmount);
         setTotalValue(totalValue);
       } else {
-        onError();
+        triggerAlert("Not enough cash to buy more stocks");
       }
     },
-    [onError, portfolio.cash, selectedStock?.price]
+    [triggerAlert, portfolio.cash, selectedStock?.price]
   );
 
   return {

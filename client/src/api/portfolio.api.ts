@@ -6,6 +6,11 @@ import { Portfolio } from "../types/portfolio.types";
 
 export type GetPortfolioResponse = Portfolio;
 
+export interface AddFundsRequest {
+  portfolioId: number;
+  cash: number;
+}
+
 export interface BuyPositionRequest {
   userId: number;
   stockId: number;
@@ -23,6 +28,10 @@ export interface BuyPositionResponse {
 }
 
 export interface SellPositionResponse {
+  isSuccess: boolean;
+}
+
+export interface AddFundsResponse {
   isSuccess: boolean;
 }
 
@@ -71,8 +80,24 @@ const sellPosition = async (payload: SellPositionRequest): Promise<ApiResponse<S
   }
 };
 
+const addFunds = async (payload: AddFundsRequest): Promise<ApiResponse<AddFundsResponse>> => {
+  try {
+    console.log(`add funds for portfolioId ${payload.portfolioId}`);
+    const response = await axios.post<AddFundsResponse>(ApiRoutes.portfolio.addFunds, payload, {
+      headers: getAuthHeaders(),
+    });
+    console.log("added funds to portfolio");
+
+    return { isSuccess: true, payload: response.data };
+  } catch (e: unknown) {
+    console.error("Error add funds to portfolio", e);
+    return { isSuccess: false, error: resolveApiErrorMessage(e) };
+  }
+};
+
 export const PortfolioApi = {
   getPortfolio,
   buyPosition,
   sellPosition,
+  addFunds,
 };

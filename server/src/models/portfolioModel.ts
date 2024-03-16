@@ -12,6 +12,9 @@ export class PortfolioModel extends BaseModel {
 		await this.portfolioRepo.update(id, { cash });
 	};
 
+	getPortfolioById = async (id: number) =>
+		this.portfolioRepo.findOne({ where: { id } });
+
 	getPortfolioByUserId = async (userId: number) =>
 		this.portfolioRepo
 			.createQueryBuilder('portfolio')

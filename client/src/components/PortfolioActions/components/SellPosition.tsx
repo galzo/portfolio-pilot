@@ -24,7 +24,7 @@ export const SellPosition: FC<PositionActionProps> = ({
   const { onSelectAmount, amount, totalValue } = useSellPositionAmount({
     selectedStock: selectedStock,
     portfolio: portfolio,
-    onError: () => triggerAlert("Not enough stocks to sell"),
+    triggerAlert,
   });
 
   const sellPosition = useCallback(async () => {

@@ -32,6 +32,31 @@ interface SellPositionRequest {
 	amount: number;
 }
 
+interface AddFundsRequest {
+	portfolioId: number;
+	cash: number;
+}
+
+export const addFunds = async (req: Request, res: Response) => {
+	const portfolioModel = new PortfolioModel(req.db);
+	const { portfolioId, cash } = req.body as AddFundsRequest;
+
+	if (cash <= 0) {
+		badRequestResponse(res, 'Amount cannot be negative');
+		return;
+	}
+
+	const targetPortfolio = await portfolioModel.getPortfolioById(portfolioId);
+	if (!targetPortfolio) {
+		notFoundResponse(res, 'No portfolio was found for given id');
+		return;
+	}
+
+	const updatedCash = targetPortfolio.cash + cash;
+	await portfolioModel.updatePortfolio(portfolioId, updatedCash);
+	okResponse(res, { isSuccess: true });
+};
+
 export const buyPosition = async (req: Request, res: Response) => {
 	const { userId, stockId, amount } = req.body as BuyPositionRequest;
 	console.log('Trying to buy position');
