@@ -5,13 +5,16 @@ import {
 	notFoundResponse,
 	okResponse,
 } from '../utils/responseUtils';
-import { PortfolioStock } from '../entities/portfolioStock';
+import { Stock } from '../entities/stock';
 
 interface GetPortfolioResponse {
 	id: number;
 	name: string;
 	cash: number;
-	stocks: PortfolioStock[];
+	positions: Array<{
+		amount: number;
+		stock: Stock;
+	}>;
 }
 
 export const getPortfolio = async (req: Request, res: Response) => {
@@ -26,13 +29,14 @@ export const getPortfolio = async (req: Request, res: Response) => {
 			return;
 		}
 
-		console.log(portfolio);
-
 		const responsePayload: GetPortfolioResponse = {
 			id: portfolio.id,
 			name: portfolio.name,
 			cash: portfolio.cash,
-			stocks: portfolio.portfolioStocks,
+			positions: portfolio.portfolioStocks.map((position) => ({
+				amount: position.amount,
+				stock: position.stock,
+			})),
 		};
 
 		console.log(`Successfully fetched portfolio for userId ${userId}`);

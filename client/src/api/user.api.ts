@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import { ApiRoutes } from "../consts/api";
-import { AuthService } from "../services/authService";
 import { ApiResponse } from "../types/api.types";
 import { resolveApiErrorMessage } from "../utils/apiUtils";
 

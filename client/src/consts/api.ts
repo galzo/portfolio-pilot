@@ -5,4 +5,7 @@ export const ApiRoutes = {
     signup: `${apiServerUrl}/api/user/signup`,
     login: `${apiServerUrl}/api/user/login`,
   },
+  portfolio: {
+    get: `${apiServerUrl}/api/portfolio`,
+  },
 };
