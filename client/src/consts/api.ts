@@ -1,4 +1,4 @@
-const apiServerUrl = import.meta.env.VITE_SERVER_API;
+const apiServerUrl = import.meta.env.VITE_SERVER_API || 'http://localhost:3000';
 
 export const ApiRoutes = {
   user: {
