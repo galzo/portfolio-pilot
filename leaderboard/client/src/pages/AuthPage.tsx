@@ -14,7 +14,7 @@ export const AuthPage = ({ onLogin }: Props) => {
   const handleSubmit = async () => {
     try {
       const endpoint = isLogin ? "login" : "signup";
-      const res = await fetch(\`http://localhost:3002/api/\${endpoint}\`, {
+      const res = await fetch(`http://localhost:3002/api/${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),

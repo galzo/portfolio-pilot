@@ -62,7 +62,7 @@ export const submitFlag = async (req: Request, res: Response) => {
 		await db.run('INSERT INTO submissions (user_id, flag) VALUES (?, ?)', [userId, flag]);
 		await db.run('UPDATE users SET score = score + ? WHERE id = ?', [points, userId]);
 		
-		res.status(200).json({ isSuccess: true, message: \`Valid Flag! You earned \${points} points.\` });
+		res.status(200).json({ isSuccess: true, message: `Valid Flag! You earned ${points} points.` });
 	} else {
 		// Wrong flag penalty logic
 		const newWrongAttempts = user.wrong_attempts + 1;
@@ -72,7 +72,7 @@ export const submitFlag = async (req: Request, res: Response) => {
 		}
 		
 		await db.run('UPDATE users SET wrong_attempts = ?, score = score - ? WHERE id = ?', [newWrongAttempts, penalty, userId]);
-		res.status(400).json({ isSuccess: false, error: \`Invalid flag. \${penalty > 0 ? 'You lost 1 point.' : 'You have ' + (3 - newWrongAttempts) + ' free wrong attempts left.'}\` });
+		res.status(400).json({ isSuccess: false, error: `Invalid flag. ${penalty > 0 ? 'You lost 1 point.' : 'You have ' + (3 - newWrongAttempts) + ' free wrong attempts left.'}` });
 	}
 };
 

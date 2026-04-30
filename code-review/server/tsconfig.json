@@ -11,15 +11,12 @@
 		"noImplicitAny": true,
 		"declaration": true,
 		"types": ["node"],
-		"typeRoots": ["./node_modules/@types", "./src/types"],
-		"emitDecoratorMetadata": true,
-		"experimentalDecorators": true,
+		"typeRoots": ["./node_modules/@types"],
 		"strictPropertyInitialization": false
 	},
 	"ts-node": {
 		"files": true
 	},
-	"files": ["./src/types/express.d.ts"],
 	"exclude": ["node_modules"],
 	"include": ["./src/**/*.ts"]
 }
