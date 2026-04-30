@@ -14,3 +14,31 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5173:5173"
+
+  code-review-backend:
+    build:
+      context: ./code-review/server
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+
+  code-review-frontend:
+    build:
+      context: ./code-review/client
+      dockerfile: Dockerfile
+    ports:
+      - "5174:5173"
+
+  leaderboard-backend:
+    build:
+      context: ./leaderboard/server
+      dockerfile: Dockerfile
+    ports:
+      - "3002:3000"
+
+  leaderboard-frontend:
+    build:
+      context: ./leaderboard/client
+      dockerfile: Dockerfile
+    ports:
+      - "5175:5173"
