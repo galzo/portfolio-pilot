@@ -49,13 +49,16 @@ const populateDatabase = async (db: DataSource) => {
 	// Seed 10 random users
 	const firstNames = ['John', 'Jane', 'Michael', 'Sarah', 'David', 'Emily', 'Robert', 'Jessica', 'William', 'Ashley'];
 	const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez'];
+	
+	// Helper for 32 char random password
+	const generateRandomPassword = () => Array(32).fill(0).map(() => Math.random().toString(36).charAt(2)).join('');
 
 	for (let i = 1; i <= 10; i++) {
-		const firstName = firstNames[i - 1 % firstNames.length];
-		const lastName = lastNames[i - 1 % lastNames.length];
+		const firstName = firstNames[(i - 1) % firstNames.length];
+		const lastName = lastNames[(i - 1) % lastNames.length];
 		const name = `${firstName} ${lastName}`;
 		const email = `${firstName.toLowerCase()}.${lastName.toLowerCase()}@example.com`;
-		const password = await hashPassword('password123');
+		const password = await hashPassword(generateRandomPassword());
 		
 		const user = await userModel.insertUser(name, email, password, false);
 		await createPortfolioForNewUser(db, user);
