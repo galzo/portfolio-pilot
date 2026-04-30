@@ -1,128 +1,181 @@
-import { useState, useEffect } from "react";
-import { Box, Button, TextField, Typography, Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material";
+import {
+  IconAlertTriangle,
+  IconFlag,
+  IconGavel,
+  IconLogout,
+  IconMath,
+  IconMinus,
+  IconScale,
+  IconTrophy,
+  IconCoin,
+} from "@tabler/icons-react";
+import { useCallback, useEffect, useState } from "react";
+import { LeaderboardEntry, LeaderboardTable } from "../components/LeaderboardTable/LeaderboardTable";
+import { PageContainer } from "../components/PageContainer/PageContainer";
+import { StatCard, StatRow } from "../components/StatCard/StatCard";
+import { SubmitFlagCard } from "../components/SubmitFlagCard/SubmitFlagCard";
+import { createStyleHook } from "../hooks/styleHooks";
 
 interface Props {
   user: { id: number; username: string };
   onLogout: () => void;
 }
 
+interface Me {
+  rank: number | null;
+  score: number;
+  wrongAttempts: number;
+  flagsSolved: number;
+}
+
+const apiUrl = (path: string) => `http://localhost:3002/api/${path}`;
+
+const useLeaderboardPageStyles = createStyleHook((theme) => {
+  return {
+    container: {
+      paddingTop: "16px",
+      paddingBottom: "16px",
+    },
+    headerRow: {
+      width: "100%",
+      display: "flex",
+      flexDirection: { xs: "column", sm: "row" },
+      justifyContent: "space-between",
+      alignItems: { xs: "flex-start", sm: "center" },
+      marginBottom: "16px",
+      gap: "12px",
+    },
+    welcome: {
+      color: theme.palette.text.primary,
+    },
+    welcomeUser: {
+      color: theme.palette.secondary.main,
+      fontWeight: 600,
+    },
+    grid: {
+      display: "flex",
+      flexDirection: { xs: "column", md: "row" },
+      gap: "24px",
+      width: "100%",
+    },
+    leftColumn: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      gap: "20px",
+      minWidth: 0,
+    },
+    rightColumn: {
+      flex: 1.4,
+      display: "flex",
+      minWidth: 0,
+    },
+  };
+});
+
 export const LeaderboardPage = ({ user, onLogout }: Props) => {
-  const [flag, setFlag] = useState("");
-  const [captchaQ, setCaptchaQ] = useState({ num1: 0, num2: 0 });
-  const [captchaA, setCaptchaA] = useState("");
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const [leaderboard, setLeaderboard] = useState<any[]>([]);
+  const styles = useLeaderboardPageStyles();
+  const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
+  const [me, setMe] = useState<Me | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const generateCaptcha = () => {
-    setCaptchaQ({
-      num1: Math.floor(Math.random() * 10) + 1,
-      num2: Math.floor(Math.random() * 10) + 1
-    });
-    setCaptchaA("");
-  };
-
-  const fetchLeaderboard = async () => {
+  const fetchLeaderboard = useCallback(async () => {
     try {
-      const res = await fetch("http://localhost:3002/api/leaderboard");
+      const res = await fetch(apiUrl(`leaderboard?userId=${user.id}`));
       const data = await res.json();
-      if (data.isSuccess) setLeaderboard(data.leaderboard);
-    } catch (err) {}
-  };
+      if (data.isSuccess) {
+        setEntries(data.leaderboard);
+        setMe(data.me ?? null);
+      }
+    } catch (_err) {
+      // leave existing data alone on transient error
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user.id]);
 
   useEffect(() => {
-    generateCaptcha();
     fetchLeaderboard();
-    const interval = setInterval(fetchLeaderboard, 5000);
+    const interval = setInterval(fetchLeaderboard, 30000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchLeaderboard]);
 
-  const handleSubmit = async () => {
-    setError("");
-    setSuccess("");
-    try {
-      const res = await fetch("http://localhost:3002/api/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          userId: user.id, 
-          flag, 
-          captchaAnswer: captchaA, 
-          captchaExpected: captchaQ.num1 + captchaQ.num2 
-        }),
-      });
-      const data = await res.json();
-      generateCaptcha();
-      if (data.isSuccess) {
-        setSuccess(data.message);
-        setFlag("");
-        fetchLeaderboard();
-      } else {
-        setError(data.error);
-      }
-    } catch (err) {
-      setError("Network error.");
-    }
-  };
+  const totalUsers = entries.length;
+  const wrongAttemptsRemaining = Math.max(0, 3 - (me?.wrongAttempts ?? 0));
+
+  const statRows: StatRow[] = [
+    {
+      icon: <IconTrophy size={14} />,
+      label: "Rank",
+      value: me?.rank ? `#${me.rank} of ${totalUsers}` : "—",
+    },
+    {
+      icon: <IconCoin size={14} />,
+      label: "Score",
+      value: me ? `${me.score} pts` : "—",
+    },
+    {
+      icon: <IconAlertTriangle size={14} />,
+      label: "Free wrong attempts left",
+      value: me ? `${wrongAttemptsRemaining} of 3` : "—",
+    },
+    {
+      icon: <IconFlag size={14} />,
+      label: "Flags solved",
+      value: me ? me.flagsSolved : "—",
+    },
+  ];
+
+  const rulesRows: StatRow[] = [
+    {
+      icon: <IconTrophy size={14} />,
+      label: "First solver",
+      value: "100 pts",
+    },
+    {
+      icon: <IconMinus size={14} />,
+      label: "Each next solver",
+      value: "−5 pts (floor 10)",
+    },
+    {
+      icon: <IconScale size={14} />,
+      label: "First 3 wrong guesses",
+      value: "free",
+    },
+    {
+      icon: <IconGavel size={14} />,
+      label: "Wrong guess #4+",
+      value: "−1 pt each",
+    },
+  ];
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 4 }}>
-        <Typography variant="h3">CTF Leaderboard</Typography>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Typography>Welcome, {user.username}</Typography>
-          <Button variant="outlined" onClick={onLogout}>Logout</Button>
+    <PageContainer>
+      <Container maxWidth="lg" sx={styles.container}>
+        <Box sx={styles.headerRow}>
+          <Typography variant="h4" sx={styles.welcome}>
+            Welcome back,{" "}
+            <Box component="span" sx={styles.welcomeUser}>
+              {user.username}
+            </Box>
+          </Typography>
+          <Button variant="outlined" color="primary" startIcon={<IconLogout size={18} />} onClick={onLogout}>
+            Sign out
+          </Button>
         </Box>
-      </Box>
 
-      <Box sx={{ display: "flex", gap: 4, flexDirection: { xs: "column", md: "row" } }}>
-        <Paper elevation={3} sx={{ flex: 1, p: 3, display: "flex", flexDirection: "column", gap: 3, height: "fit-content" }}>
-          <Typography variant="h5">Submit Flag</Typography>
-          <TextField label="Flag" variant="outlined" placeholder="flag{...}" value={flag} onChange={e => setFlag(e.target.value)} fullWidth />
-          
-          <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-            <Typography variant="body1" sx={{ fontWeight: "bold" }}>What is {captchaQ.num1} + {captchaQ.num2}?</Typography>
-            <TextField label="Answer" type="number" variant="outlined" value={captchaA} onChange={e => setCaptchaA(e.target.value)} size="small" />
+        <Box sx={styles.grid}>
+          <Box sx={styles.leftColumn}>
+            <StatCard title="Your Stats" rows={statRows} />
+            <SubmitFlagCard userId={user.id} onScored={fetchLeaderboard} />
+            <StatCard title="Scoring Rules" rows={rulesRows} />
           </Box>
-
-          {error && <Typography color="error">{error}</Typography>}
-          {success && <Typography color="success.main">{success}</Typography>}
-
-          <Button variant="contained" color="primary" onClick={handleSubmit} size="large">Submit</Button>
-          
-          <Box sx={{ mt: 2, bgcolor: "rgba(255,255,255,0.05)", p: 2, borderRadius: 1 }}>
-            <Typography variant="body2" color="textSecondary">
-              * First submission for a flag gives 100 points.<br/>
-              * Points drop by 5 for each subsequent solver.<br/>
-              * First 3 incorrect submissions are free. Afterward, 1 point is deducted per incorrect submission.
-            </Typography>
+          <Box sx={styles.rightColumn}>
+            <LeaderboardTable entries={entries} currentUserId={user.id} isLoading={isLoading} />
           </Box>
-        </Paper>
-
-        <Paper elevation={3} sx={{ flex: 2, p: 3 }}>
-          <Typography variant="h5" gutterBottom>Top Hackers</Typography>
-          <TableContainer>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Rank</TableCell>
-                  <TableCell>Username</TableCell>
-                  <TableCell align="right">Score</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {leaderboard.map((u, idx) => (
-                  <TableRow key={u.id}>
-                    <TableCell>{idx + 1}</TableCell>
-                    <TableCell sx={{ fontWeight: u.id === user.id ? "bold" : "normal" }}>{u.username}</TableCell>
-                    <TableCell align="right">{u.score}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Paper>
-      </Box>
-    </Container>
+        </Box>
+      </Container>
+    </PageContainer>
   );
 };

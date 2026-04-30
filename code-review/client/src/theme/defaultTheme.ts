@@ -1,21 +1,22 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme } from "@mui/material";
+import { AppColors } from "../consts/colors";
 
-const { palette: { augmentColor } } = createTheme();
+const {
+  palette: { augmentColor },
+} = createTheme();
+
 const createColor = (mainColor: string) => augmentColor({ color: { main: mainColor, contrastText: "white" } });
 
 export const defaultTheme = createTheme({
   palette: {
-    mode: "light",
-    primary: createColor("#3F51B5"),
-    secondary: createColor("#F50057"),
-    background: {
-      default: "#fafafa",
-      paper: "#ffffff",
-    },
-    divider: "#212121",
+    primary: createColor(AppColors.primary),
+    secondary: createColor(AppColors.secondary),
+    background: { default: AppColors.background, paper: AppColors.paper },
+    divider: AppColors.divider,
     text: {
-      primary: "#212121",
-      secondary: "#212121",
+      primary: AppColors.text,
+      secondary: AppColors.text,
+      disabled: AppColors.text,
     },
     action: {
       disabledBackground: "#878f99",

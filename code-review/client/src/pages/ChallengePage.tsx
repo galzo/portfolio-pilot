@@ -1,119 +1,123 @@
+import { Box, Container, Typography } from "@mui/material";
+import { IconShieldLock } from "@tabler/icons-react";
 import { useState } from "react";
-import { Box, Button, TextField, Typography, Container, Paper, Select, MenuItem, FormControl, InputLabel } from "@mui/material";
-import { CodeSnippet } from "../components/CodeSnippet";
+import { CodeSnippet, LineSelection } from "../components/CodeSnippet/CodeSnippet";
+import { PageContainer } from "../components/PageContainer/PageContainer";
+import { SubmissionPanel, VulnEntry } from "../components/SubmissionPanel/SubmissionPanel";
+import { createStyleHook } from "../hooks/styleHooks";
+
+const useChallengePageStyles = createStyleHook((theme) => {
+  return {
+    container: {
+      paddingTop: "16px",
+      paddingBottom: "16px",
+    },
+    header: {
+      display: "flex",
+      flexDirection: "row",
+      alignItems: "center",
+      gap: "16px",
+      marginBottom: "24px",
+    },
+    titleIcon: {
+      backgroundColor: theme.palette.secondary.main,
+      color: theme.palette.background.paper,
+      width: "48px",
+      height: "48px",
+      borderRadius: "100%",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+    },
+    titleText: {
+      color: theme.palette.text.primary,
+    },
+    subtitle: {
+      color: theme.palette.text.primary,
+      opacity: 0.65,
+    },
+    grid: {
+      display: "flex",
+      flexDirection: { xs: "column", lg: "row" },
+      gap: "24px",
+      width: "100%",
+      alignItems: "flex-start",
+    },
+    codeColumn: {
+      flex: 2,
+      minWidth: 0,
+    },
+    panelColumn: {
+      flex: 1,
+      minWidth: 0,
+    },
+  };
+});
+
+const initialEntries: VulnEntry[] = [
+  { fromLine: "", toLine: "", type: "" },
+  { fromLine: "", toLine: "", type: "" },
+];
 
 export const ChallengePage = () => {
-  const [vuln1From, setVuln1From] = useState("");
-  const [vuln1To, setVuln1To] = useState("");
-  const [vuln1Type, setVuln1Type] = useState("");
+  const styles = useChallengePageStyles();
+  const [entries, setEntries] = useState<VulnEntry[]>(initialEntries);
+  const [activeIdx, setActiveIdx] = useState(0);
 
-  const [vuln2From, setVuln2From] = useState("");
-  const [vuln2To, setVuln2To] = useState("");
-  const [vuln2Type, setVuln2Type] = useState("");
-
-  const [flag, setFlag] = useState("");
-  const [error, setError] = useState("");
-
-  const handleSubmit = async () => {
-    try {
-      setError("");
-      setFlag("");
-      const vulnerabilities = [
-        { fromLine: parseInt(vuln1From), toLine: parseInt(vuln1To), type: vuln1Type },
-        { fromLine: parseInt(vuln2From), toLine: parseInt(vuln2To), type: vuln2Type },
-      ];
-
-      const res = await fetch("http://localhost:3001/api/challenge/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ vulnerabilities }),
-      });
-      const data = await res.json();
-      if (data.isSuccess) {
-        setFlag(data.flag);
-      } else {
-        setError(data.error || "Incorrect vulnerabilities. Keep trying!");
-      }
-    } catch (err) {
-      setError("Network error. Make sure the server is running.");
-    }
+  const updateEntry = (idx: number, patch: Partial<VulnEntry>) => {
+    setEntries((prev) => prev.map((e, i) => (i === idx ? { ...e, ...patch } : e)));
   };
 
-  const owaspOptions = [
-    "Broken Object Level Authorization (BOLA)",
-    "Broken Authentication",
-    "Broken Object Property Level Authorization",
-    "Unrestricted Resource Consumption",
-    "Broken Function Level Authorization (BFLA)",
-    "Unrestricted Access to Sensitive Business Flows",
-    "Server Side Request Forgery (SSRF)",
-    "Security Misconfiguration",
-    "Improper Inventory Management",
-    "Unsafe Consumption of APIs",
-  ];
+  const activeSelection: LineSelection | null = (() => {
+    const e = entries[activeIdx];
+    const from = parseInt(e.fromLine, 10);
+    const to = parseInt(e.toLine, 10);
+    if (Number.isInteger(from) && Number.isInteger(to) && from <= to) {
+      return { fromLine: from, toLine: to };
+    }
+    return null;
+  })();
+
+  const handleRangeSelect = (fromLine: number, toLine: number) => {
+    setEntries((prev) => {
+      const next = [...prev];
+      next[activeIdx] = { ...next[activeIdx], fromLine: String(fromLine), toLine: String(toLine) };
+      return next;
+    });
+  };
 
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
-      <Typography variant="h3" gutterBottom>
-        Code Review Challenge
-      </Typography>
-      <Typography variant="subtitle1" gutterBottom>
-        Find the two vulnerabilities in the code below. Provide the line numbers (inclusive) and the type.
-      </Typography>
-      
-      <Box sx={{ display: "flex", gap: 4, mt: 4, flexDirection: { xs: "column", md: "row" } }}>
-        <Paper elevation={3} sx={{ flex: 2, height: "70vh", overflowY: "auto", bgcolor: "#1e1e1e" }}>
-          <CodeSnippet />
-        </Paper>
-
-        <Paper elevation={3} sx={{ flex: 1, p: 3, display: "flex", flexDirection: "column", gap: 3 }}>
-          <Typography variant="h6">Submit Findings</Typography>
-          
-          <Box sx={{ border: "1px solid #ccc", p: 2, borderRadius: 1 }}>
-            <Typography variant="subtitle2" gutterBottom>Vulnerability 1</Typography>
-            <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
-              <TextField label="From Line" type="number" value={vuln1From} onChange={e => setVuln1From(e.target.value)} fullWidth />
-              <TextField label="To Line" type="number" value={vuln1To} onChange={e => setVuln1To(e.target.value)} fullWidth />
-            </Box>
-            <FormControl fullWidth>
-              <InputLabel>Type</InputLabel>
-              <Select value={vuln1Type} onChange={e => setVuln1Type(e.target.value as string)} label="Type">
-                {owaspOptions.map(o => (
-                  <MenuItem key={o} value={o.includes('BOLA') ? 'BOLA' : o.includes('BFLA') ? 'BFLA' : o}>{o}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+    <PageContainer>
+      <Container maxWidth="xl" sx={styles.container}>
+        <Box sx={styles.header}>
+          <Box sx={styles.titleIcon}>
+            <IconShieldLock size={28} />
           </Box>
-
-          <Box sx={{ border: "1px solid #ccc", p: 2, borderRadius: 1 }}>
-            <Typography variant="subtitle2" gutterBottom>Vulnerability 2</Typography>
-            <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
-              <TextField label="From Line" type="number" value={vuln2From} onChange={e => setVuln2From(e.target.value)} fullWidth />
-              <TextField label="To Line" type="number" value={vuln2To} onChange={e => setVuln2To(e.target.value)} fullWidth />
-            </Box>
-            <FormControl fullWidth>
-              <InputLabel>Type</InputLabel>
-              <Select value={vuln2Type} onChange={e => setVuln2Type(e.target.value as string)} label="Type">
-                {owaspOptions.map(o => (
-                  <MenuItem key={o} value={o.includes('BOLA') ? 'BOLA' : o.includes('BFLA') ? 'BFLA' : o}>{o}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+          <Box>
+            <Typography variant="h4" sx={styles.titleText}>
+              Code Review Challenge
+            </Typography>
+            <Typography variant="subtitle1" sx={styles.subtitle}>
+              Find the vulnerabilities in this Express service. Watch out for red herrings — and AI hallucinations.
+            </Typography>
           </Box>
+        </Box>
 
-          <Button variant="contained" color="primary" onClick={handleSubmit} size="large">
-            Submit
-          </Button>
-
-          {error && <Typography color="error" variant="body1">{error}</Typography>}
-          {flag && (
-            <Box sx={{ mt: 2, p: 2, bgcolor: "success.light", color: "success.contrastText", borderRadius: 1 }}>
-              <Typography variant="h6">Success!</Typography>
-              <Typography variant="body1" sx={{ fontFamily: 'monospace' }}>{flag}</Typography>
-            </Box>
-          )}
-        </Paper>
-      </Box>
-    </Container>
+        <Box sx={styles.grid}>
+          <Box sx={styles.codeColumn}>
+            <CodeSnippet onRangeSelect={handleRangeSelect} selection={activeSelection} />
+          </Box>
+          <Box sx={styles.panelColumn}>
+            <SubmissionPanel
+              entries={entries}
+              onEntryChange={updateEntry}
+              onActivate={setActiveIdx}
+              activeIdx={activeIdx}
+              onSubmitFlag={() => {}}
+            />
+          </Box>
+        </Box>
+      </Container>
+    </PageContainer>
   );
 };

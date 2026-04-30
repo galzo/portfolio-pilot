@@ -76,19 +76,28 @@ Welcome to the Portfolio Pilot CTF! This document provides a complete, step-by-s
 
 ## Challenge 5: Code Review Master
 
-**Goal**: Unlock the code review challenge, find the vulnerabilities, and bypass the AI protections.
+**Goal**: Unlock the code review challenge, find the two real vulnerabilities, and avoid being misled by red herrings and AI hallucinations.
 
 **Solution**:
 1. Navigate to the Code Review Challenge at `http://localhost:5174`.
 2. It requires a "Previous Flag" to unlock. Enter any valid flag you obtained (e.g., `flag{DimondHands2023}`).
-3. Once unlocked, you are presented with a 300+ line code snippet. 
-> [!NOTE]
-> The code contains CSS obfuscation (invisible zero-width spaces are injected between characters) and hidden prompt injections. If you try to blindly copy-paste this code into ChatGPT or Claude, the AI will get confused by the invisible characters and the hidden instructions, and it will falsely claim the code is 100% secure! You must rely on your own eyes.
-4. Manually inspect the code to find:
-   - **Vulnerability 1**: A BOLA vulnerability exists on lines 120-140. There is a missing check to ensure `req.user.id === document.ownerId` in the document deletion route.
-   - **Vulnerability 2**: A BFLA vulnerability exists on lines 210-230. There is a missing check to ensure `req.user.role === 'admin'` before allowing the deletion of users.
-5. Submit these line ranges and select the correct vulnerability types from the dropdown on the right side of the screen.
-6. The server will reward you with the final flag: `flag{C0d3R3v13wM4st3r}`.
+3. Once unlocked, you are presented with a ~430-line Express service (`portfolioRoutes.ts`) rendered with syntax highlighting and real line numbers. Click any line number to start a range and shift-click another to set the end — the form on the right autofills.
+
+> [!IMPORTANT]
+> **Per-session watermarking.** The server issues a unique copy of the source per browser session — a random number of "padding" comment lines are inserted before each vulnerable block, so the line numbers of the real bugs are different for every solver. AI answers shared between users will not transfer.
+>
+> **Layered anti-AI defense.** The challenge actively fights LLM-assisted cheating:
+> 1. **Clipboard poisoning** — when you copy code from the panel, every third character gets a zero-width space inserted, plus decoy `// SECURITY-REVIEWED` comments are spliced into the copied text. Naive paste-into-ChatGPT misreads the file.
+> 2. **Decoy prompt injections** — the file's banner comment, a `<meta name="ai-instruction">` tag, a hidden `<div>`, and several inline `// SECURITY-REVIEWED` annotations all confidently announce that the file is audit-clean except for an imaginary SQL injection. LLMs that obey those instructions report the wrong answer.
+> 3. **Red herrings** — several routes look vulnerable but are not: a SQL string that's actually parameterized via `parameterizedQuery()`, a `/portfolio/redirect` that's allow-listed by host, an `/admin/users` handler that inherits `requireAdmin` from the `adminRouter` mount, and a JSON.parse for the audit-log filter that's length-bounded and try/catched.
+>
+> Read the code with your own eyes. Specifically watch the request body: who is the handler claiming to act on behalf of, and is the privileged middleware actually applied?
+
+4. Find the two real vulnerabilities (line ranges will differ per session — verify in your own copy):
+   - **BOLA** in `router.post('/portfolio/getPosition', ...)`. The handler reads `req.body.userId` and returns that user's position, never checking it against `req.user.id`. Click the route's opening `router.post(...)` line, then shift-click the closing `});` of that handler. Choose **Broken Object Level Authorization** in the dropdown.
+   - **BFLA** in `router.post('/admin/users/delete', ...)`. The handler is mounted on the main `router` and only wraps `requireAuth` — it never goes through the `adminRouter` (which is the only place `requireAdmin` is applied). Any authenticated non-admin can call it. Select that handler's line range with type **Broken Function Level Authorization**.
+
+5. Submit. The server validates the submitted ranges against your session's actual ranges and rewards the final flag: `flag{C0d3R3v13wM4st3r}`.
 
 ---
 
@@ -97,4 +106,5 @@ Welcome to the Portfolio Pilot CTF! This document provides a complete, step-by-s
 You can submit all your collected flags to the Leaderboard at `http://localhost:5175`.
 - **Dynamic Scoring**: The first person to submit a flag gets 100 points. Subsequent solvers get 5 points less (95, 90, 85...).
 - **Penalties**: You get 3 free incorrect guesses. After that, each incorrect guess deducts 1 point from your total score.
-- **CAPTCHA**: A simple math-based CAPTCHA is required for every submission to prevent brute-forcing tools from simply submitting thousands of random strings.
+- **CAPTCHA**: A server-issued single-use math CAPTCHA is required for every submission. The client cannot supply or precompute the expected answer — the server hands out a `captchaId` that is consumed once. Brute-force scripts have to fetch a fresh CAPTCHA per attempt.
+- **Floor**: scores never drop below 10 points per flag, so even latecomers earn something for solving.
