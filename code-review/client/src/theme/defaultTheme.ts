@@ -1,20 +1,25 @@
 import { createTheme } from "@mui/material/styles";
 
+const { palette: { augmentColor } } = createTheme();
+const createColor = (mainColor: string) => augmentColor({ color: { main: mainColor, contrastText: "white" } });
+
 export const defaultTheme = createTheme({
   palette: {
-    mode: "dark",
-    primary: {
-      main: "#7c3aed",
-    },
-    secondary: {
-      main: "#10b981",
-    },
+    mode: "light",
+    primary: createColor("#3F51B5"),
+    secondary: createColor("#F50057"),
     background: {
-      default: "#0f0f1a",
-      paper: "#1a1a2e",
+      default: "#fafafa",
+      paper: "#ffffff",
     },
-  },
-  typography: {
-    fontFamily: "'Inter', 'Roboto', sans-serif",
+    divider: "#212121",
+    text: {
+      primary: "#212121",
+      secondary: "#212121",
+    },
+    action: {
+      disabledBackground: "#878f99",
+      disabled: "white",
+    },
   },
 });

@@ -11,7 +11,7 @@ app.use(cors());
 
 app.use('/api', leaderboardRouter);
 
-const PORT = process.env.SERVER_PORT || 3002;
+const PORT = process.env.SERVER_PORT || 3000;
 
 setupDatabase().then(() => {
 	app.listen(PORT, () => {

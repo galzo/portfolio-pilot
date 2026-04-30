@@ -10,7 +10,7 @@ app.use(cors());
 
 app.use('/api/challenge', challengeRouter);
 
-const PORT = process.env.SERVER_PORT || 3001;
+const PORT = process.env.SERVER_PORT || 3000;
 app.listen(PORT, () => {
 	console.log(`listening on port ${PORT}`);
 });
